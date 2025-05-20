@@ -2,13 +2,13 @@ import React from 'react';
 
 function Login() {
   return (
-    <div className="App">
+    <main>
       <header className="App-header">
-        <a className="btn-spotify" href="/api/auth/login">
+        <button className="btn-spotify" onClick={() => window.location.href = "/api/auth/login"}>
           Login with Spotify
-        </a>
+        </button>
       </header>
-    </div>
+    </main>
   );
 }
 

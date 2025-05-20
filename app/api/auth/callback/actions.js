@@ -43,7 +43,8 @@ export async function handleSpotifyCallback(searchParams) {
     const { access_token, refresh_token, expires_in } = data;
 
     // Set the access token as a cookie
-    cookies().set('access_token', access_token, { httpOnly: false, maxAge: expires_in });
+    const cookieStore = await cookies();
+    cookieStore.set('access_token', access_token, { httpOnly: false, maxAge: expires_in });
 
     return { success: true, access_token };
   } catch (err) {

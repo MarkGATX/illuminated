@@ -10,11 +10,25 @@ async function getToken() {
 }
 
 export default function Home() {
-  const { access_token: token } = getToken();
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchToken() {
+      const res = await getToken();
+      setToken(res.access_token);
+      setLoading(false);
+    }
+    fetchToken();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>
-      {token ? <WebPlayback token={token} /> : <Login />}
+    
+        {token ? <WebPlayback token={token} /> : <Login />}
+
     </>
   );
 }
