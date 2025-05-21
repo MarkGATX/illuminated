@@ -47,7 +47,7 @@ export default function SearchBar () {
     };
 
     return (
-        <div>
+        <div className={styles.searchContainer} >
             <form onSubmit={handleSubmit} className={`${styles.searchBar} `} style={{ display: 'flex', alignItems: 'center', gap: '0.5em', marginBottom: '1em' }}>
 
                 <input
@@ -73,8 +73,10 @@ export default function SearchBar () {
                 <div className={styles.searchResults} style={{ marginBottom: '1em' }}>
                     <ul style={{ listStyle: 'none', padding: 0 }}>
                         {searchResults.map(track => (
-                            <li key={track.id} style={{ marginBottom: '0.5em', display: 'flex', alignItems: 'center', gap: '1em' }}>
-                                <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} style={{ borderRadius: '4px' }} />
+                            <li key={track.id} >
+                                <div className={styles.searchResultImageContainer}>
+                                    <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
+                                </div>
                                 <div>
                                     <div style={{ fontWeight: 'bold' }}>{track.name}</div>
                                     <div style={{ fontSize: '0.9em', color: '#888' }}>{track.artists?.map(a => a.name).join(', ')}</div>

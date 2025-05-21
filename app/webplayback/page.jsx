@@ -53,6 +53,16 @@ export default function WebPlayback() {
     return oklchColors;
   }
 
+  // Helper to get an array of exactly n colors, repeating or sampling as needed
+  function getFixedLengthColors(colors, n = 10) {
+    if (!colors || colors.length === 0) return Array(n).fill('oklch(0 0 0)');
+    const arr = [];
+    for (let i = 0; i < n; i++) {
+      arr.push(colors[i % colors.length]);
+    }
+    return arr;
+  }
+
   const likeButton = async () => {
     if (!currentTrack?.id) return;
     let response;
@@ -275,7 +285,7 @@ export default function WebPlayback() {
         <div className={styles.mainWrapper}>
           {/* Color Visualizer */}
           <div className={`${styles.visualizerContainer} ${styles.left}`}>
-            {oklchColorsArray && oklchColorsArray.length > 0 && oklchColorsArray.map((color, i) => (
+            {getFixedLengthColors(oklchColorsArray, 10).map((color, i) => (
               <div
                 key={i}
                 className={styles.visualizerBar}
@@ -283,8 +293,7 @@ export default function WebPlayback() {
                   background: color,
                   boxShadow: `${color} 0 0 50px`,
                   width: `50px`,
-                  // Remove transform scaleX for static width
-                  height: `calc(100dvh / ${oklchColorsArray.length})`,
+                  height: `calc(100dvh / 10)`,
                   minWidth: '8px',
                   maxWidth: '100%',
                   transition: 'all 3s linear'
@@ -293,7 +302,7 @@ export default function WebPlayback() {
             ))}
           </div>
           <div className={`${styles.visualizerContainer} ${styles.right}`}>
-            {oklchColorsArray && oklchColorsArray.length > 0 && oklchColorsArray.map((color, i) => (
+            {getFixedLengthColors(oklchColorsArray, 10).map((color, i) => (
               <div
                 key={i}
                 className={styles.visualizerBar}
@@ -301,8 +310,7 @@ export default function WebPlayback() {
                   background: color,
                   boxShadow: `${color} 0 0 50px`,
                   width: `50px`,
-                  // Remove transform scaleX for static width
-                  height: `calc(100dvh / ${oklchColorsArray.length})`,
+                  height: `calc(100dvh / 10)`,
                   minWidth: '8px',
                   maxWidth: '100%',
                   transition: 'all 3s linear'

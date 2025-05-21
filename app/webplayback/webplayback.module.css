@@ -108,18 +108,19 @@
 }
 
 .left {
-    left: -50px;
+    left: -40px;
 }
 
 .right {
-    right: -50px;
+    right: -40px;
 }
 
 
 .visualizerBar {
     border-radius: 6px;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    /* height will be set dynamically below */
+    filter:blur(20px);
+    
 }
 
 @keyframes cycleOpacity {
