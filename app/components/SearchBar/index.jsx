@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './searchBar.module.css';
 
 // A reusable search input component with results display
-export default function SearchBar ({ onTrackSelect }) {
+export default function SearchBar({ onTrackSelect }) {
     const [query, setQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
@@ -59,7 +59,7 @@ export default function SearchBar ({ onTrackSelect }) {
                     style={{ flex: 1, padding: '0.5em', borderRadius: '4px', border: '1px solid #ccc' }}
                 />
                 <button type="submit" className={`${styles.searchButton}`}>
-                    <span style={{ display: 'flex', alignItems: 'center', color: 'var(--search-icon-color, #888)', fontSize: '1.2em',  }}>
+                    <span style={{ display: 'flex', alignItems: 'center', color: 'var(--search-icon-color, #888)', fontSize: '1.2em', }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="9" cy="9" r="7" stroke="currentColor" strokeWidth="2" />
                             <line x1="14.2" y1="14.2" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

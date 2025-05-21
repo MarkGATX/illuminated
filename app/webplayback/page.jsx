@@ -32,7 +32,7 @@ export default function WebPlayback() {
     maxColors: 10,
     format: 'hex',
     maxSize: 200,
-    orderBy: 'vibrance'
+    orderBy: 'dominance'
   });
   // Remove local oklchColors, use state instead
   // const oklchColors = Array(2)
@@ -340,7 +340,7 @@ export default function WebPlayback() {
       <main>
         <header>
           <button
-            style={{ position: 'absolute', top: 20, right: 20, zIndex: 10, padding: '.5em' }}
+            style={{ position: 'absolute', top: 20, right: 100, zIndex: 10, padding: '.5em' }}
             onClick={() => {
               document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
               window.location.href = '/';
