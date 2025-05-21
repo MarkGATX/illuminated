@@ -3,6 +3,7 @@ import styles from './webplayback.module.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { useExtractColors } from 'react-extract-colors';
 import Color from 'colorjs.io';
+import SearchBar from '../components/SearchBar';
 
 
 const track = {
@@ -24,7 +25,7 @@ export default function WebPlayback() {
   const [player, setPlayer] = useState(null);
   const [deviceId, setDeviceId] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-  const [barWidths, setBarWidths] = useState(Array(24).fill(50));
+  const [oklchColorsArray, setOklchColorsArray] = useState([]);
   const animationRef = useRef();
   const albumArtUrl = currentTrack?.album?.images[0]?.url || '/fallback.webp';
   const { colors } = useExtractColors(albumArtUrl, {
@@ -33,13 +34,10 @@ export default function WebPlayback() {
     maxSize: 200,
     orderBy: 'vibrance'
   });
-  // const oklchColors = colors.map(hex => {
-  //   const hexValue = new Color(hex);
-  //   return hexValue.to("oklch")
-  // }).flatMap(x => [x,x,x])
-  const oklchColors = Array(2)
-    .fill()
-    .flatMap(() => colors.map(hex => new Color(hex).to("oklch")))
+  // Remove local oklchColors, use state instead
+  // const oklchColors = Array(2)
+  //   .fill()
+  //   .flatMap(() => colors.map(hex => new Color(hex).to("oklch")))
 
   const getAccessTokenFromCookie = () => {
     return document.cookie
@@ -215,35 +213,30 @@ export default function WebPlayback() {
     checkIfLiked();
   }, [currentTrack]);
 
-  // Animation loop for visualizer (now just cycles widths randomly)
-  //animationframe is too hectic for this, so using setInterval instead
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const animate = () => {
-  //     // Generate random widths for visualizer bars
-  //     const widths = Array(24).fill(0).map(() => 24 + Math.random() * 76);
-  //     if (isMounted) setBarWidths(widths);
-  //     animationRef.current = requestAnimationFrame(animate);
-  //   };
-  //   animationRef.current = requestAnimationFrame(animate);
-  //   return () => {
-  //     isMounted = false;
-  //     if (animationRef.current) cancelAnimationFrame(animationRef.current);
-  //   };
-  // }, []);
+  // Initialize oklchColorsArray when colors change
+  useEffect(() => {
+    if (colors && colors.length > 0) {
+      setOklchColorsArray(Array(20).fill().flatMap(() => colors.map(hex => new Color(hex).to("oklch"))));
+    }
+  }, [colors]);
 
   useEffect(() => {
     let isMounted = true;
+    // Animate color changes every 3 seconds
     const interval = setInterval(() => {
-      const widths = Array(24).fill(0).map(() => 24 + Math.random() * 70);
-      if (isMounted) setBarWidths(widths);
-    }, 3000); // update every 200ms
-  
+      if (!colors || colors.length === 0) return;
+      // Shuffle the colors array for animation effect
+      const shuffled = [...colors].sort(() => Math.random() - 0.5);
+      if (isMounted) {
+        // Update oklchColorsArray by shuffling colors
+        setOklchColorsArray(Array(20).fill().flatMap(() => shuffled.map(hex => new Color(hex).to("oklch"))));
+      }
+    }, 3000);
     return () => {
       isMounted = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [colors]);
 
 
   return (
@@ -265,7 +258,7 @@ export default function WebPlayback() {
         <div className={styles.mainWrapper}>
           {/* Color Visualizer */}
           <div className={`${styles.visualizerContainer} ${styles.left}`}>
-            {oklchColors && oklchColors.length > 0 && oklchColors.map((color, i) => (
+            {oklchColorsArray && oklchColorsArray.length > 0 && oklchColorsArray.map((color, i) => (
               <div
                 key={i}
                 className={styles.visualizerBar}
@@ -273,9 +266,9 @@ export default function WebPlayback() {
                   background: color,
                   boxShadow: `${color} 0 0 50px`,
                   width: `50px`,
-                  transform: `scaleX(${barWidths[i] / 50})`,
-                  height: `calc(100dvh / ${oklchColors.length})`,
-                  minWidth: '8px', // ensure visible even if width is small
+                  // Remove transform scaleX for static width
+                  height: `calc(100dvh / ${oklchColorsArray.length})`,
+                  minWidth: '8px',
                   maxWidth: '100%',
                   transition: 'all 3s cubic-bezier(0.4,0,0.2,1)'
                 }}
@@ -283,7 +276,7 @@ export default function WebPlayback() {
             ))}
           </div>
           <div className={`${styles.visualizerContainer} ${styles.right}`}>
-            {oklchColors && oklchColors.length > 0 && oklchColors.map((color, i) => (
+            {oklchColorsArray && oklchColorsArray.length > 0 && oklchColorsArray.map((color, i) => (
               <div
                 key={i}
                 className={styles.visualizerBar}
@@ -291,9 +284,9 @@ export default function WebPlayback() {
                   background: color,
                   boxShadow: `${color} 0 0 50px`,
                   width: `50px`,
-                  transform: `scaleX(${barWidths[i] / 100})`,
-                  height: `calc(100dvh / ${oklchColors.length})`,
-                  minWidth: '8px', // ensure visible even if width is small
+                  // Remove transform scaleX for static width
+                  height: `calc(100dvh / ${oklchColorsArray.length})`,
+                  minWidth: '8px',
                   maxWidth: '100%',
                   transition: 'all 3s cubic-bezier(0.4,0,0.2,1)'
                 }}
@@ -312,7 +305,7 @@ export default function WebPlayback() {
             >
               {isLiked ? '❤️' : '🤍'}
             </p>
-            
+
           </div>
 
           <div className={styles.trackInfoContainer}>
@@ -351,12 +344,11 @@ export default function WebPlayback() {
             </button>
 
 
+
           </div>
+          <SearchBar />
         </div>
       </main>
     </>
   );
 }
-
-
-// export default WebPlayback;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Login() {
+export default function Login() {
   return (
     <main>
       <header className="App-header">
@@ -11,5 +11,3 @@ function Login() {
     </main>
   );
 }
-
-export default Login;

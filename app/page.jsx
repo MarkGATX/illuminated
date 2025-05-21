@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import WebPlayback from './webplayback';
 import Login from './login';
+import WebPlayback from './webplayback/page';
 
 async function getToken() {
   const res = await fetch('http://localhost:3000/api/auth/token');
@@ -28,6 +28,7 @@ export default function Home() {
     <>
     
         {token ? <WebPlayback token={token} /> : <Login />}
+        
 
     </>
   );
