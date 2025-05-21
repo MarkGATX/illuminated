@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './searchBar.module.css';
 
 // A reusable search input component with results display
-export default function SearchBar () {
+export default function SearchBar ({ onTrackSelect }) {
     const [query, setQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
@@ -73,7 +73,7 @@ export default function SearchBar () {
                 <div className={styles.searchResults} style={{ marginBottom: '1em' }}>
                     <ul style={{ listStyle: 'none', padding: 0 }}>
                         {searchResults.map(track => (
-                            <li key={track.id} >
+                            <li key={track.id} onClick={() => onTrackSelect && onTrackSelect({ ...track, searchResults })} >
                                 <div className={styles.searchResultImageContainer}>
                                     <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
                                 </div>

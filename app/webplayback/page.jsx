@@ -155,7 +155,26 @@ export default function WebPlayback() {
 
       const newPlayer = new window.Spotify.Player({
         name: 'Web Playback SDK',
-        getOAuthToken: cb => { cb(accessToken); },
+        getOAuthToken: async cb => {
+          // Always get the latest token from cookies, and refresh if needed
+          let accessToken = getAccessTokenFromCookie();
+          // Optionally, you could check expiry and call refresh endpoint here
+          if (!accessToken) {
+            // Try to refresh
+            try {
+              const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
+              const refreshData = await refreshRes.json();
+              if (refreshData.access_token) {
+                accessToken = refreshData.access_token;
+              }
+            } catch (e) {
+              // If refresh fails, redirect to login
+              window.location.href = '/';
+              return;
+            }
+          }
+          cb(accessToken);
+        },
         volume: 0.5
       });
 
@@ -266,6 +285,56 @@ export default function WebPlayback() {
   }, [colors]);
 
 
+  // Play a track on the current device, with queue support
+  const playTrack = async (track) => {
+    if (!deviceId || !track?.uri) {
+      alert('No device or track selected!');
+      return;
+    }
+    const accessToken = getAccessTokenFromCookie();
+    // Try to use context_uri and offset if available
+    if (track.album && track.album.uri) {
+      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          context_uri: track.album.uri,
+          offset: { uri: track.uri },
+        })
+      });
+      return;
+    }
+    // Otherwise, play all search result URIs as a queue
+    if (window.lastSearchResults && Array.isArray(window.lastSearchResults)) {
+      const uris = window.lastSearchResults.map(t => t.uri);
+      const offset = uris.indexOf(track.uri);
+      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          uris,
+          offset: { position: offset >= 0 ? offset : 0 },
+        })
+      });
+      return;
+    }
+    // Fallback: play just the single track
+    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ uris: [track.uri] })
+    });
+  };
+
   return (
     <>
       <main>
@@ -371,7 +440,16 @@ export default function WebPlayback() {
 
 
           </div>
-          <SearchBar />
+          <SearchBar onTrackSelect={track => {
+            // Save the last search results globally for queue support
+            if (window && window.lastSearchResults !== undefined) {
+              window.lastSearchResults = null;
+            }
+            if (track && track.searchResults) {
+              window.lastSearchResults = track.searchResults;
+            }
+            playTrack(track);
+          }} />
         </div>
       </main>
     </>
