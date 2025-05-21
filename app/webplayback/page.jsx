@@ -46,6 +46,13 @@ export default function WebPlayback() {
       ?.split('=')[1];
   };
 
+  // Helper to repeat or sample colors to exactly n items
+  function getOklchColorArray(hexColors) {
+    if (!hexColors || hexColors.length === 0) return [];
+    const oklchColors = hexColors.map(hex => new Color(hex).to("oklch").toString());
+    return oklchColors;
+  }
+
   const likeButton = async () => {
     if (!currentTrack?.id) return;
     let response;
@@ -189,10 +196,6 @@ export default function WebPlayback() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log('Current Track:', currentTrack);
-
-  }, [currentTrack]);
 
   useEffect(() => {
     const checkIfLiked = async () => {
@@ -213,23 +216,37 @@ export default function WebPlayback() {
     checkIfLiked();
   }, [currentTrack]);
 
+
+
   // Initialize oklchColorsArray when colors change
   useEffect(() => {
     if (colors && colors.length > 0) {
-      setOklchColorsArray(Array(20).fill().flatMap(() => colors.map(hex => new Color(hex).to("oklch"))));
+      const arr = getOklchColorArray(colors);
+      console.log('oklchColorsArray:', arr);
+      setOklchColorsArray(arr);
     }
   }, [colors]);
+
+  // Fisher-Yates shuffle
+  function fisherYatesShuffle(array) {
+    const arr = array.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
 
   useEffect(() => {
     let isMounted = true;
     // Animate color changes every 3 seconds
     const interval = setInterval(() => {
       if (!colors || colors.length === 0) return;
-      // Shuffle the colors array for animation effect
-      const shuffled = [...colors].sort(() => Math.random() - 0.5);
+      // Fisher-Yates shuffle for animation effect
+      const shuffledColors = fisherYatesShuffle(colors);
+      const arr = getOklchColorArray(shuffledColors);
       if (isMounted) {
-        // Update oklchColorsArray by shuffling colors
-        setOklchColorsArray(Array(20).fill().flatMap(() => shuffled.map(hex => new Color(hex).to("oklch"))));
+        setOklchColorsArray(arr);
       }
     }, 3000);
     return () => {
@@ -270,7 +287,7 @@ export default function WebPlayback() {
                   height: `calc(100dvh / ${oklchColorsArray.length})`,
                   minWidth: '8px',
                   maxWidth: '100%',
-                  transition: 'all 3s cubic-bezier(0.4,0,0.2,1)'
+                  transition: 'all 3s linear'
                 }}
               />
             ))}
@@ -288,7 +305,7 @@ export default function WebPlayback() {
                   height: `calc(100dvh / ${oklchColorsArray.length})`,
                   minWidth: '8px',
                   maxWidth: '100%',
-                  transition: 'all 3s cubic-bezier(0.4,0,0.2,1)'
+                  transition: 'all 3s linear'
                 }}
               />
             ))}
