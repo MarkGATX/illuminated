@@ -67,7 +67,7 @@ export default function Playlists() {
                 xmlns="http://www.w3.org/2000/svg"
                 aria-label="Scroll left"
                 style={{ cursor: canScrollLeft ? 'pointer' : 'not-allowed', opacity: canScrollLeft ? 1 : 0.4 }}
-                tabIndex={canScrollLeft ? 0 : -1}
+                // tabIndex={canScrollLeft ? 0 : -1}
                 // role="button"
                 // stroke="#f5e1e1"
                 strokeWidth="2"
@@ -76,13 +76,13 @@ export default function Playlists() {
                     const list = listRef.current;
                     if (list) list.scrollBy({ left: -300, behavior: 'smooth' });
                 }}
-                onKeyDown={e => {
-                    if (!canScrollLeft) return;
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        const list = listRef.current;
-                        if (list) list.scrollBy({ left: -300, behavior: 'smooth' });
-                    }
-                }}
+                // onKeyDown={e => {
+                //     if (!canScrollLeft) return;
+                //     if (e.key === 'Enter' || e.key === ' ') {
+                //         const list = listRef.current;
+                //         if (list) list.scrollBy({ left: -300, behavior: 'smooth' });
+                //     }
+                // }}
             >
                 <polygon points="18,6 10,14 18,22"  strokeWidth="2" />
             </svg>
@@ -107,7 +107,7 @@ export default function Playlists() {
                 xmlns="http://www.w3.org/2000/svg"
                 aria-label="Scroll right"
                 style={{ cursor: canScrollRight ? 'pointer' : 'not-allowed', stroke: '#f5e1e1', fill: '#f5e1e1', opacity: canScrollRight ? 1 : 0.4 }}
-                tabIndex={canScrollRight ? 0 : -1}
+                // tabIndex={canScrollRight ? 0 : -1}
                 // role="button"
                 // stroke="#f5e1e1"
                 strokeWidth="2"
@@ -116,13 +116,13 @@ export default function Playlists() {
                     const list = listRef.current;
                     if (list) list.scrollBy({ left: 300, behavior: 'smooth' });
                 }}
-                onKeyDown={e => {
-                    if (!canScrollRight) return;
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        const list = listRef.current;
-                        if (list) list.scrollBy({ left: 300, behavior: 'smooth' });
-                    }
-                }}
+                // onKeyDown={e => {
+                //     if (!canScrollRight) return;
+                //     if (e.key === 'Enter' || e.key === ' ') {
+                //         const list = listRef.current;
+                //         if (list) list.scrollBy({ left: 300, behavior: 'smooth' });
+                //     }
+                // }}
             >
                 <polygon points="10,6 18,14 10,22" strokeWidth="2" />
             </svg>
