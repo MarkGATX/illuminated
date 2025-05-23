@@ -1,5 +1,16 @@
+.searchBar {
+    display: flex;
+    flex-direction: row;
+    gap: .5em;
+    width: 50%;
+}
+
 .searchButton {
     padding: .5em;
+    flex: 0 0 auto;
+    width: auto;
+    min-width: unset;
+    align-self: flex-end;
 }
 
 .searchContainer {
@@ -8,7 +19,14 @@
     align-items: center;
     justify-content: center;
     gap: 1em;
+    width: 80dvw;
+}
+
+.searchInput {
+    flex: 1 1 auto;
     width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .searchResults {
@@ -30,7 +48,7 @@
 
         & li {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             width: 45%;
             height: 3em;
@@ -44,7 +62,19 @@
             transition: all 0.3s ease;
             overflow: hidden;
             box-shadow: 0 2px 8px 0 rgba(245, 81, 81, 0.08), 0 1.5px 4px 0 rgba(245, 81, 81, 0.08);
-            cursor:pointer;
+            cursor: pointer;
+            gap: .5em;
+        }
+
+        /* Truncate long track names inside li */
+        & li .trackName {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            font-weight: bold;
         }
 
         & li:hover {
@@ -62,6 +92,9 @@
     position: relative;
     overflow: hidden;
     height: 3em;
+    flex: 0 0 3em;
+    min-width: 3em;
+    min-height: 3em;
 }
 
 .searchResultImageContainer img {
@@ -72,4 +105,20 @@
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.artistName {
+    font-size: 0.85em;
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    min-width: 0;
+}
+
+@media (width <=600px) {
+    .searchResults ul li {
+        width: 100%;
+    }
 }

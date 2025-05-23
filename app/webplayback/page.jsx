@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useExtractColors } from 'react-extract-colors';
 import Color from 'colorjs.io';
 import SearchBar from '../components/SearchBar';
+import Playlists from '../components/Playlists';
 
 
 const track = {
@@ -277,7 +278,7 @@ export default function WebPlayback() {
       if (isMounted) {
         setOklchColorsArray(arr);
       }
-    }, 3000);
+    }, 5000);
     return () => {
       isMounted = false;
       clearInterval(interval);
@@ -339,7 +340,7 @@ export default function WebPlayback() {
     <>
       <main>
         <header>
-          <button
+          <button className={styles.logoutButton}
             style={{ position: 'absolute', top: 20, right: 100, zIndex: 10, padding: '.5em' }}
             onClick={() => {
               document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -349,7 +350,7 @@ export default function WebPlayback() {
             Logout
           </button>
 
-          {deviceId ? <p>Illuminated Web Player</p> : <p>Connecting...</p>}
+          {deviceId ? <Playlists /> : <p>Connecting...</p>}
         </header>
         <div className={styles.mainWrapper}>
           {/* Color Visualizer */}
@@ -365,7 +366,7 @@ export default function WebPlayback() {
                   height: `calc(100dvh / 10)`,
                   minWidth: '8px',
                   maxWidth: '100%',
-                  transition: 'all 3s linear'
+                  transition: 'all 5s linear'
                 }}
               />
             ))}
@@ -382,7 +383,7 @@ export default function WebPlayback() {
                   height: `calc(100dvh / 10)`,
                   minWidth: '8px',
                   maxWidth: '100%',
-                  transition: 'all 3s linear'
+                  transition: 'all 5s linear'
                 }}
               />
             ))}
@@ -409,47 +410,71 @@ export default function WebPlayback() {
 
             <div className={styles.artistName}>{
               currentTrack?.artists[0]?.name || "Unknown Artist"
-            }</div>
+            } - {currentTrack?.album?.name || ""}</div>
           </div>
 
           <div className={styles.playButtonsContainer}>
-            <button className="btn-spotify" onClick={async () => {
-              if (player) {
-                await player.previousTrack();
-              }
-            }} >
-              &lt;&lt;
-            </button>
+            {/* Previous Track: Two left chevrons */}
+            <svg
+              width="36" height="36" viewBox="0 0 36 36" fill="none"
+              xmlns="http://www.w3.org/2000/svg" aria-label="Previous"
+              style={{ cursor: 'pointer' }}
+              onClick={async () => {
+                if (player) {
+                  await player.previousTrack();
+                }
+              }}
+            >
+              <polygon points="20,8 12,18 20,28" fill="currentColor" />
+              <polygon points="28,8 20,18 28,28" fill="currentColor" />
+            </svg>
 
-            <button className="btn-spotify" onClick={async () => {
-              if (player) {
-                await player.togglePlay();
-              }
-            }} >
-              {!is_active || is_paused ? "PLAY" : "PAUSE"}
-            </button>
+            {/* Play/Pause SVGs (unchanged logic, color updated) */}
+            {!is_active || is_paused ? (
+              <svg
+                width="54" height="54" viewBox="0 0 54 54" fill="none"
+                xmlns="http://www.w3.org/2000/svg" aria-label="Play"
+                style={{ cursor: 'pointer' }}
+                onClick={async () => {
+                  if (player) {
+                    await player.togglePlay();
+                  }
+                }}
+              >
+                <polygon points="15,9 45,27 15,45" fill="currentColor" />
+              </svg>
+            ) : (
+              <svg
+                width="54" height="54" viewBox="0 0 54 54" fill="none"
+                xmlns="http://www.w3.org/2000/svg" aria-label="Pause"
+                style={{ cursor: 'pointer' }}
+                onClick={async () => {
+                  if (player) {
+                    await player.togglePlay();
+                  }
+                }}
+              >
+                <rect x="19.5" y="15" width="6" height="24" rx="1.5" fill="currentColor" />
+                <rect x="31.5" y="15" width="6" height="24" rx="1.5" fill="currentColor" />
+              </svg>
+            )}
 
-            <button className="btn-spotify" onClick={async () => {
-              if (player) {
-                await player.nextTrack();
-              }
-            }} >
-              &gt;&gt;
-            </button>
-
-
-
+            {/* Next Track: Two right chevrons */}
+            <svg
+              width="36" height="36" viewBox="0 0 36 36" fill="none"
+              xmlns="http://www.w3.org/2000/svg" aria-label="Next"
+              style={{ cursor: 'pointer' }}
+              onClick={async () => {
+                if (player) {
+                  await player.nextTrack();
+                }
+              }}
+            >
+              <polygon points="16,8 24,18 16,28" fill="currentColor" />
+              <polygon points="8,8 16,18 8,28" fill="currentColor" />
+            </svg>
           </div>
-          <SearchBar onTrackSelect={track => {
-            // Save the last search results globally for queue support
-            if (window && window.lastSearchResults !== undefined) {
-              window.lastSearchResults = null;
-            }
-            if (track && track.searchResults) {
-              window.lastSearchResults = track.searchResults;
-            }
-            playTrack(track);
-          }} />
+          <SearchBar />
         </div>
       </main>
     </>

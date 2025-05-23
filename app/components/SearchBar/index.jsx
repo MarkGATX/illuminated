@@ -48,7 +48,7 @@ export default function SearchBar({ onTrackSelect }) {
 
     return (
         <div className={styles.searchContainer} >
-            <form onSubmit={handleSubmit} className={`${styles.searchBar} `} style={{ display: 'flex', alignItems: 'center', gap: '0.5em', marginBottom: '1em' }}>
+            <form onSubmit={handleSubmit} className={`${styles.searchBar} `} >
 
                 <input
                     type="text"
@@ -78,8 +78,8 @@ export default function SearchBar({ onTrackSelect }) {
                                     <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
                                 </div>
                                 <div>
-                                    <div style={{ fontWeight: 'bold' }}>{track.name}</div>
-                                    <div style={{ fontSize: '0.9em', color: '#888' }}>{track.artists?.map(a => a.name).join(', ')}</div>
+                                    <div className={styles.trackName} >{track.name}</div>
+                                    <div className={styles.artistName} >{track.artists?.map(a => a.name).join(', ')}</div>
                                 </div>
                             </li>
                         ))}

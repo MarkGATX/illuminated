@@ -36,6 +36,15 @@
     text-shadow: #000000 0px 0px 20px;
 }
 
+.logoutButton {
+    position: absolute;
+    top: 20px;
+    right: 100px;
+    z-index: 10;
+    padding: 0.5em;
+    box-shadow: 0 0 10px #000000;
+}
+
 .mainWrapper {
     display: flex;
     flex-direction: column;
@@ -47,6 +56,14 @@
 }
 
 .playButtonsContainer {
+    background: rgba(2, 14, 42, 0.92);
+    /* Material Design blue-grey 900, slightly transparent */
+    padding: 0.5em 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    /* You can adjust the above for your layout */
     display: flex;
     gap: 1em;
     justify-content: center;
@@ -77,6 +94,14 @@
         box-shadow: inset 0px 0px 5px #000000;
         background: linear-gradient(145deg, #cfdaf9, #f0f0f0);
     } */
+}
+
+.playButtonsContainer svg {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.playButtonsContainer svg:hover {
+    transform: scale(1.27);
 }
 
 .trackInfoContainer {
@@ -119,8 +144,8 @@
 .visualizerBar {
     border-radius: 6px;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    filter:blur(20px);
-    
+    filter: blur(20px);
+
 }
 
 @keyframes cycleOpacity {

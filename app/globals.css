@@ -1,7 +1,7 @@
 :root {
   --dark: #00061D;
   /* Added missing '#' */
-  --light: #ffffff;
+  --light: #f5e1e1;
   /* Added missing ';' */
 
 }
@@ -54,21 +54,29 @@ button {
   color: #101116;
   /* box-shadow: 2px 2px 10px #000000,
     -3px -3px 10px #668ce5; */
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   position: relative;
 }
 
 button:hover {
-  background-color: #fbe9e7;
+  /* background-color: #fbe9e7;
   background: linear-gradient(145deg, #f5e1e1, #fbe9e7);
   box-shadow: 2px 2px 10px #000000,
-    -3px -3px 12px #b0c7fd;
+    -3px -3px 12px #b0c7fd; */
+    transform: scale(1.08);
 }
 
-button:active,
+/* button:active,
 .buttonActive {
   box-shadow: inset 0px 0px 5px #000000;
   background: linear-gradient(145deg, #fbe9e7, #f5e1e1);
+} */
+
+header {
+  width:100dvw;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 
 main {
@@ -79,7 +87,7 @@ main {
   width: 100dvw;
   height: 100dvh;
   gap: 2em;
-  padding: 2em 0 0 0;
+  padding: 5em 0 0 0;
 }
 
 @media (prefers-color-scheme: dark) {

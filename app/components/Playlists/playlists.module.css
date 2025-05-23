@@ -1,0 +1,118 @@
+.playlistsRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+    gap: 0.5em;
+}
+
+/* Hide scrollbar for all browsers */
+.playlistsList {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+.playlistsList::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
+.playlistsRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+    gap: 0.5em;
+    position: relative;
+    justify-content: center;
+      /* mix-blend-mode: difference; */
+
+}
+
+/* Remove old ul/li styles from .playlistsRow if needed */
+.playlistsRow ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    width:80%;
+    
+
+
+    & li {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 25%;
+        gap: .5em;
+        flex-shrink: 0;
+        height: 3em;
+        padding: 0 1em 0 0;
+        border-radius: 8px;
+        /* Material Design complementary background */
+        background-color: #f5e1e1;
+        /* Complementary to #cfdaf9 (main bg) */
+        background: linear-gradient(145deg, #fbe9e7, #f5e1e1);
+        color: #101116;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        box-shadow: 0 2px 8px 0 rgba(245, 81, 81, 0.08), 0 1.5px 4px 0 rgba(245, 81, 81, 0.08);
+        cursor: pointer;
+    }
+}
+
+.playlistImageContainer {
+    width: 3em;
+    aspect-ratio: 1/1;
+    position: relative;
+    overflow: hidden;
+    height: 3em;
+
+    & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+.playlistName {
+    width: 50%;
+    font-size: .8em;
+    align-self: flex-start
+}
+
+.playlistsTitle {
+    position:absolute;
+    top:-1em;
+    left:-1em;
+    opacity:50%;
+    font-size:5em;
+    z-index: -1;
+}
+
+.arrowSvg {
+    stroke: '#f5e1e1';
+     fill: '#f5e1e1';
+    width: 1.5em;
+    height: 1.5em;
+    display: block;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.arrowSvg:hover {
+    transform: scale(1.27);
+    color: #a12d2d;
+}
