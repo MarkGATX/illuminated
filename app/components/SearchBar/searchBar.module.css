@@ -81,6 +81,8 @@
         gap: .5em;
         padding: .5em;
         justify-content: space-between;
+        list-style-type: none;
+        padding:0;
 
         & li {
             display: flex;
@@ -92,32 +94,23 @@
             border-radius: 8px;
             /* Material Design complementary background */
             background-color: #f5e1e1;
-            /* Complementary to #cfdaf9 (main bg) */
-            background: linear-gradient(145deg, #fbe9e7, #f5e1e1);
-            color: #101116;
+
+            background: linear-gradient(145deg, rgba(2, 14, 42, 0.92) 70%, rgba(2, 14, 42, 0));           
+            color: var(--light);
+            /* color: #101116; */
             transition: all 0.3s ease;
             overflow: hidden;
-            box-shadow: 0 2px 8px 0 rgba(245, 81, 81, 0.08), 0 1.5px 4px 0 rgba(245, 81, 81, 0.08);
+            /* box-shadow: 0 2px 8px 0 rgba(245, 81, 81, 0.08), 0 1.5px 4px 0 rgba(245, 81, 81, 0.08); */
             cursor: pointer;
             gap: .5em;
         }
 
-        /* Truncate long track names inside li */
-        & li .trackName {
-            flex: 1 1 auto;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            display: block;
-            font-weight: bold;
-        }
-
         & li:hover {
-            transform: scale(1.05);
-            background-color: #fff3f0;
+            transform: scale(1.07);
+            /* background-color: #fff3f0; */
             /* Lighter, Material-inspired */
-            background: linear-gradient(145deg, #fff3f0, #fbe9e7);
+            /* background: linear-gradient(145deg, #fff3f0, #fbe9e7); */
+
         }
     }
 }
@@ -155,6 +148,15 @@
     opacity: 50%;
     font-size: 5em;
     z-index: -1;
+}
+
+.trackName {
+    text-overflow: ellipsis;
+    width: 80%;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
 }
 
 .artistName {

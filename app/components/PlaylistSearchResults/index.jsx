@@ -8,7 +8,6 @@ function getAccessTokenFromCookie() {
         ?.split('=')[1];
 }
 
-
 export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
     const [searchResults, setSearchResults] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
@@ -52,27 +51,49 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
     // Reset page to 0 if query changes
     useEffect(() => { setPage(0); }, [query]);
 
-    console.log('searchResults: ', searchResults);
-
     return (
         <div className={styles.playlistResultsContents}>
             {searchLoading &&
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                    {[...Array(10)].map((_, i) => (
-                        <li key={i} className={styles.loadingPlaceholder}>
-                            <div className={styles.searchResultImageContainer} />
-                            <div>
-                                <div className={styles.trackName} />
-                                <div className={styles.artistName} />
-                            </div>
-                        </li>
-                    ))}
-                </ul>}
+                <>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {[...Array(10)].map((_, i) => (
+                            <li key={i} className={styles.loadingPlaceholder}>
+                                <div className={styles.searchResultImageContainer} />
+                                <div style={{width:'100%'}}>
+                                    <div className={styles.trackName} />
+                                    <div className={styles.artistName} />
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className={styles.paginationWrapper}>
+                        <svg
+                            width="36" height="36" viewBox="0 0 36 36" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" aria-label="Previous"
+                            className={`${styles.paginationButton} ${page === 0 ? styles.paginationDisabled : ''}`}
+                            onClick={() => page > 0 && setPage(page - 1)}
+                        >
+                            <polygon points="24,8 12,18 24,28" fill="currentColor" />
+                        </svg>
+                        <span className={styles.paginationPageInfo}>
+                            Page {page + 1} of {Math.max(1, Math.ceil(totalResults / 10))}
+                        </span>
+                        <svg
+                            width="36" height="36" viewBox="0 0 36 36" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" aria-label="Next"
+                            className={`${styles.paginationButton} ${((page + 1) * 10 >= totalResults || searchResults.length === 0) ? styles.paginationDisabled : ''}`}
+                            onClick={() => ((page + 1) * 10 < totalResults) && setPage(page + 1)}
+                        >
+                            <polygon points="12,8 24,18 12,28" fill="currentColor" />
+                        </svg>
+                    </div>
+                </>
+            }
             {searchError && <div style={{ color: 'red' }}>Error: {searchError}</div>}
 
             {(!searchLoading && !searchError) && (
                 <>
-                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <ul >
                         {/* Sort results to ensure empty slots are at the end */}
                         {[...searchResults].sort((a, b) => {
                             if (a && !b) return -1;
@@ -84,7 +105,7 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                                     <div className={styles.searchResultImageContainer}>
                                         <img src={playlist?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
                                     </div>
-                                    <div>
+                                    <div style={{width:'100%'}}>
                                         <div className={styles.trackName}>{playlist?.name}</div>
                                         <div className={styles.artistName}>{playlist.owner?.display_name}</div>
                                     </div>
@@ -97,7 +118,7 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                         {Array.from({ length: 10 - searchResults.length }).map((_, i) => (
                             <li key={`placeholder-${i}`} className={styles.loadingPlaceholder} style={{ visibility: 'hidden' }}>
                                 <div className={styles.searchResultImageContainer} />
-                                <div>
+                                <div style={{width:'100%'}}>
                                     <div className={styles.trackName} />
                                     <div className={styles.artistName} />
                                 </div>

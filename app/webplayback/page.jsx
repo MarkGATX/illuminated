@@ -5,6 +5,7 @@ import { useExtractColors } from 'react-extract-colors';
 import Color from 'colorjs.io';
 import SearchBar from '../components/SearchBar';
 import Playlists from '../components/Playlists';
+import ColorVisualizer from '../components/colorVisualizer';
 
 
 const track = {
@@ -262,43 +263,43 @@ export default function WebPlayback() {
   }, [colors]);
 
   // Fisher-Yates shuffle
-  function fisherYatesShuffle(array) {
-    const arr = array.slice();
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
+  // function fisherYatesShuffle(array) {
+  //   const arr = array.slice();
+  //   for (let i = arr.length - 1; i > 0; i--) {
+  //     const j = Math.floor(Math.random() * (i + 1));
+  //     [arr[i], arr[j]] = [arr[j], arr[i]];
+  //   }
+  //   return arr;
+  // }
 
-  useEffect(() => {
-    let isMounted = true;
-    // Animate color changes every 3 seconds
-    const interval = setInterval(() => {
-      if (!colors || colors.length === 0) return;
-      // Fisher-Yates shuffle for animation effect
-      const shuffledColors = fisherYatesShuffle(colors);
-      const arr = getOklchColorArray(shuffledColors);
-      if (isMounted) {
-        setOklchColorsArray(arr);
-      }
-    }, 5000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, [colors]);
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   // Animate color changes every 3 seconds
+  //   const interval = setInterval(() => {
+  //     if (!colors || colors.length === 0) return;
+  //     // Fisher-Yates shuffle for animation effect
+  //     const shuffledColors = fisherYatesShuffle(colors);
+  //     const arr = getOklchColorArray(shuffledColors);
+  //     if (isMounted) {
+  //       setOklchColorsArray(arr);
+  //     }
+  //   }, 5000);
+  //   return () => {
+  //     isMounted = false;
+  //     clearInterval(interval);
+  //   };
+  // }, [colors]);
 
 
-  // Play a track on the current device, with queue support
-  const playTrack = async (track) => {
-    if (!deviceId || !track?.uri) {
-      alert('No device or track selected!');
+  // Play a track or playlist on the current device
+  const playTrack = async (item) => {
+    if (!deviceId || (!item?.uri && !item?.playlistUri)) {
+      alert('No device or track/playlist selected!');
       return;
     }
     const accessToken = getAccessTokenFromCookie();
-    // Try to use context_uri and offset if available
-    if (track.album && track.album.uri) {
+    // If item is a playlist (from playlist search)
+    if (item.playlistUri) {
       await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
@@ -306,8 +307,7 @@ export default function WebPlayback() {
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          context_uri: track.album.uri,
-          offset: { uri: track.uri },
+          context_uri: item.playlistUri
         })
       });
       return;
@@ -315,7 +315,7 @@ export default function WebPlayback() {
     // Otherwise, play all search result URIs as a queue
     if (window.lastSearchResults && Array.isArray(window.lastSearchResults)) {
       const uris = window.lastSearchResults.map(t => t.uri);
-      const offset = uris.indexOf(track.uri);
+      const offset = uris.indexOf(item.uri);
       await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
@@ -336,7 +336,7 @@ export default function WebPlayback() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ uris: [track.uri] })
+      body: JSON.stringify({ uris: [item.uri] })
     });
   };
 
@@ -354,44 +354,12 @@ export default function WebPlayback() {
             Logout
           </button>
 
-          {deviceId ? <Playlists /> : <p>Connecting...</p>}
+          {deviceId ? <Playlists playPlaylist={playTrack} /> : <p>Connecting...</p>}
         </header>
         <div className={styles.mainWrapper}>
           {/* Color Visualizer */}
-          <div className={`${styles.visualizerContainer} ${styles.left}`}>
-            {getFixedLengthColors(oklchColorsArray, 10).map((color, i) => (
-              <div
-                key={i}
-                className={styles.visualizerBar}
-                style={{
-                  background: color,
-                  boxShadow: `${color} 0 0 50px`,
-                  width: `50px`,
-                  height: `calc(100dvh / 10)`,
-                  minWidth: '8px',
-                  maxWidth: '100%',
-                  transition: 'all 5s linear'
-                }}
-              />
-            ))}
-          </div>
-          <div className={`${styles.visualizerContainer} ${styles.right}`}>
-            {getFixedLengthColors(oklchColorsArray, 10).map((color, i) => (
-              <div
-                key={i}
-                className={styles.visualizerBar}
-                style={{
-                  background: color,
-                  boxShadow: `${color} 0 0 50px`,
-                  width: `50px`,
-                  height: `calc(100dvh / 10)`,
-                  minWidth: '8px',
-                  maxWidth: '100%',
-                  transition: 'all 5s linear'
-                }}
-              />
-            ))}
-          </div>
+          <ColorVisualizer colors={oklchColorsArray} />
+
           <div className={styles.albumArtContainer}>
             <img
               src={albumArtUrl}

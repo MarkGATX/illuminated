@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './playlists.module.css';
 
-export default function Playlists() {
+export default function Playlists({ playPlaylist }) {
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -55,6 +55,14 @@ export default function Playlists() {
         };
     }, [playlists]);
 
+        // Handler to play a playlist by passing a special object
+    const handlePlaylistSelect = (playlist) => {
+        if (playlist && playlist.uri) {
+            // Pass a special object to onTrackSelect with a playlistUri property
+            playPlaylist({ playlistUri: playlist.uri });
+        }
+    };
+
     if (loading) return <div>Loading playlists...</div>;
     if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
@@ -76,19 +84,24 @@ export default function Playlists() {
                     const list = listRef.current;
                     if (list) list.scrollBy({ left: -300, behavior: 'smooth' });
                 }}
-                // onKeyDown={e => {
-                //     if (!canScrollLeft) return;
-                //     if (e.key === 'Enter' || e.key === ' ') {
-                //         const list = listRef.current;
-                //         if (list) list.scrollBy({ left: -300, behavior: 'smooth' });
-                //     }
-                // }}
+            // onKeyDown={e => {
+            //     if (!canScrollLeft) return;
+            //     if (e.key === 'Enter' || e.key === ' ') {
+            //         const list = listRef.current;
+            //         if (list) list.scrollBy({ left: -300, behavior: 'smooth' });
+            //     }
+            // }}
             >
-                <polygon points="18,6 10,14 18,22"  strokeWidth="2" />
+                <polygon points="18,6 10,14 18,22" strokeWidth="2" />
             </svg>
             <ul id="playlists-list" className={styles.playlistsList} ref={listRef}>
                 {playlists.map(playlist => (
-                    <li key={playlist.id} className={styles.playlistCard}>
+                    <li
+                        key={playlist.id}
+                        className={styles.playlistCard}
+                        onClick={() => handlePlaylistSelect(playlist)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <div className={styles.playlistImageContainer}>
                             <img
                                 src={playlist?.images?.[0]?.url || '/fallback.webp'}
@@ -116,13 +129,13 @@ export default function Playlists() {
                     const list = listRef.current;
                     if (list) list.scrollBy({ left: 300, behavior: 'smooth' });
                 }}
-                // onKeyDown={e => {
-                //     if (!canScrollRight) return;
-                //     if (e.key === 'Enter' || e.key === ' ') {
-                //         const list = listRef.current;
-                //         if (list) list.scrollBy({ left: 300, behavior: 'smooth' });
-                //     }
-                // }}
+            // onKeyDown={e => {
+            //     if (!canScrollRight) return;
+            //     if (e.key === 'Enter' || e.key === ' ') {
+            //         const list = listRef.current;
+            //         if (list) list.scrollBy({ left: 300, behavior: 'smooth' });
+            //     }
+            // }}
             >
                 <polygon points="10,6 18,14 10,22" strokeWidth="2" />
             </svg>

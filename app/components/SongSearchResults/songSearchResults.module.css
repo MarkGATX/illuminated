@@ -53,27 +53,14 @@
             height: 3em;
             padding: 0 1em 0 0;
             border-radius: 8px;
-            /* Material Design complementary background */
-            background-color: #f5e1e1;
-            /* Complementary to #cfdaf9 (main bg) */
-            background: linear-gradient(145deg, #fbe9e7, #f5e1e1);
-            color: #101116;
+            /* Use the same background as next/previous track info */
+            background: linear-gradient(to right, rgba(2, 14, 42, 0.92) 70%, rgba(2, 14, 42, 0));
+            color: var(--light);
             transition: all 0.3s ease;
             overflow: hidden;
             box-shadow: 0 2px 8px 0 rgba(245, 81, 81, 0.08), 0 1.5px 4px 0 rgba(245, 81, 81, 0.08);
             cursor: pointer;
             gap: .5em;
-        }
-
-        /* Truncate long track names inside li */
-        & li .trackName {
-            flex: 1 1 auto;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            display: block;
-            font-weight: bold;
         }
 
         & li:hover {
@@ -117,6 +104,15 @@
     opacity: 50%;
     font-size: 5em;
     z-index: -1;
+}
+
+.trackName {
+    text-overflow: ellipsis;
+    width: 70%;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
 }
 
 .artistName {

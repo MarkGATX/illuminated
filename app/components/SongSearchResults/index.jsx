@@ -60,7 +60,7 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                             <li key={i} className={styles.loadingPlaceholder}>
                                 {/* Placeholder content, e.g. skeleton loader */}
                                 <div className={styles.searchResultImageContainer} />
-                                <div>
+                                <div style={{width:'100%'}}>
                                     <div className={styles.trackName} />
                                     <div className={styles.artistName} />
                                 </div>
@@ -93,13 +93,13 @@ export default function SongSearchResults({ query, onTrackSelect }) {
             {searchError && <div style={{ color: 'red' }}>Error: {searchError}</div>}
             {(!searchLoading && !searchError) && (
                 <>
-                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <ul >
                         {searchResults.map(track => (
                             <li key={track.id} onClick={() => onTrackSelect && onTrackSelect(track)}>
                                 <div className={styles.searchResultImageContainer}>
                                     <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
                                 </div>
-                                <div>
+                                <div style={{width:'100%'}}>
                                     <div className={styles.trackName}>{track.name}</div>
                                     <div className={styles.artistName}>{track.artists?.map(a => a.name).join(', ')}</div>
                                 </div>
@@ -109,7 +109,7 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                         {Array.from({ length: 10 - searchResults.length }).map((_, i) => (
                             <li key={`placeholder-${i}`} className={styles.loadingPlaceholder} style={{ visibility: 'hidden' }}>
                                 <div className={styles.searchResultImageContainer} />
-                                <div>
+                                <div style={{width:'100%'}}>
                                     <div className={styles.trackName} />
                                     <div className={styles.artistName} />
                                 </div>

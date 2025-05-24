@@ -111,6 +111,15 @@
     min-width: 0;
 }
 
+.trackName {
+    text-overflow: ellipsis;
+    width: 70%;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
+}
+
 @media (width <=600px) {
     .searchResults ul li {
         width: 100%;

@@ -1,0 +1,43 @@
+.visualizerContainer,
+.visualizerContainer {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: stretch;
+    gap: 0;
+    z-index: 2;
+    /* animation: cycleOpacity 4s infinite ease-in-out; */
+}
+
+.left {
+    left: -40px;
+}
+
+.right {
+    right: -40px;
+}
+
+
+.visualizerBar {
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(20px);
+
+}
+
+@keyframes cycleOpacity {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

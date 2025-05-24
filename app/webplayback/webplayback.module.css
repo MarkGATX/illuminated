@@ -190,7 +190,7 @@
     text-align: center;
 }
 
-.visualizerContainer,
+/* .visualizerContainer,
 .visualizerContainer {
     position: absolute;
     top: 0;
@@ -202,9 +202,9 @@
     gap: 0;
     z-index: 2;
     /* animation: cycleOpacity 4s infinite ease-in-out; */
-}
+/* } */ 
 
-.left {
+/* .left {
     left: -40px;
 }
 
@@ -232,4 +232,4 @@
     100% {
         opacity: 1;
     }
-}
+} */
