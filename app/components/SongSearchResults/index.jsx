@@ -33,7 +33,10 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                 const data = await res.json();
                 if (!ignore) {
                     setSearchResults(data.tracks?.items || []);
-                    setTotalResults(data.tracks?.total || 0);
+                    // Only set totalResults if this is the first page or a new query
+                    if (page === 0) {
+                        setTotalResults(data.tracks?.total || 0);
+                    }
                 }
             } catch (err) {
                 if (!ignore) setSearchError(err.message);
