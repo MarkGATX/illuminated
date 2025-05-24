@@ -13,6 +13,7 @@ export default function SongSearchResults({ query, onTrackSelect }) {
     const [searchLoading, setSearchLoading] = useState(false);
     const [searchError, setSearchError] = useState(null);
     const [page, setPage] = useState(0);
+    const [totalResults, setTotalResults] = useState(0);
 
     // Fetch results when query or page changes
     useEffect(() => {
@@ -30,8 +31,10 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                 );
                 if (!res.ok) throw new Error('Search failed');
                 const data = await res.json();
-                console.log('tracks: ', data);
-                if (!ignore) setSearchResults(data.tracks?.items || []);
+                if (!ignore) {
+                    setSearchResults(data.tracks?.items || []);
+                    setTotalResults(data.tracks?.total || 0);
+                }
             } catch (err) {
                 if (!ignore) setSearchError(err.message);
             } finally {
@@ -53,10 +56,10 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                         {[...Array(10)].map((_, i) => (
                             <li key={i} className={styles.loadingPlaceholder}>
                                 {/* Placeholder content, e.g. skeleton loader */}
-                                <div className={styles.searchResultImageContainer}  />
+                                <div className={styles.searchResultImageContainer} />
                                 <div>
-                                    <div className={styles.trackName}  />
-                                    <div className={styles.artistName}  />
+                                    <div className={styles.trackName} />
+                                    <div className={styles.artistName} />
                                 </div>
                             </li>
                         ))}
@@ -70,12 +73,14 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                         >
                             <polygon points="24,8 12,18 24,28" fill="currentColor" />
                         </svg>
-                        <span className={styles.paginationPageInfo}>Page {page + 1} / 3</span>
+                        <span className={styles.paginationPageInfo}>
+                            Page {page + 1} of {Math.max(1, Math.ceil(totalResults / 10))}
+                        </span>
                         <svg
                             width="36" height="36" viewBox="0 0 36 36" fill="none"
                             xmlns="http://www.w3.org/2000/svg" aria-label="Next"
-                            className={`${styles.paginationButton} ${(searchResults.length < 10 || page >= 2) ? styles.paginationDisabled : ''}`}
-                            onClick={() => (searchResults.length === 10 && page < 2) && setPage(page + 1)}
+                            className={`${styles.paginationButton} ${((page + 1) * 10 >= totalResults || searchResults.length === 0) ? styles.paginationDisabled : ''}`}
+                            onClick={() => ((page + 1) * 10 < totalResults) && setPage(page + 1)}
                         >
                             <polygon points="12,8 24,18 12,28" fill="currentColor" />
                         </svg>
@@ -97,6 +102,16 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                                 </div>
                             </li>
                         ))}
+                        {/* Render placeholders if less than 10 results */}
+                        {Array.from({ length: 10 - searchResults.length }).map((_, i) => (
+                            <li key={`placeholder-${i}`} className={styles.loadingPlaceholder} style={{ visibility: 'hidden' }}>
+                                <div className={styles.searchResultImageContainer} />
+                                <div>
+                                    <div className={styles.trackName} />
+                                    <div className={styles.artistName} />
+                                </div>
+                            </li>
+                        ))}
                     </ul>
                     <div className={styles.paginationWrapper}>
                         <svg
@@ -107,12 +122,14 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                         >
                             <polygon points="24,8 12,18 24,28" fill="currentColor" />
                         </svg>
-                        <span className={styles.paginationPageInfo}>Page {page + 1} / 3</span>
+                        <span className={styles.paginationPageInfo}>
+                            Page {page + 1} of {Math.max(1, Math.ceil(totalResults / 10))}
+                        </span>
                         <svg
                             width="36" height="36" viewBox="0 0 36 36" fill="none"
                             xmlns="http://www.w3.org/2000/svg" aria-label="Next"
-                            className={`${styles.paginationButton} ${(searchResults.length < 10 || page >= 2) ? styles.paginationDisabled : ''}`}
-                            onClick={() => (searchResults.length === 10 && page < 2) && setPage(page + 1)}
+                            className={`${styles.paginationButton} ${((page + 1) * 10 >= totalResults || searchResults.length === 0) ? styles.paginationDisabled : ''}`}
+                            onClick={() => ((page + 1) * 10 < totalResults) && setPage(page + 1)}
                         >
                             <polygon points="12,8 24,18 12,28" fill="currentColor" />
                         </svg>
