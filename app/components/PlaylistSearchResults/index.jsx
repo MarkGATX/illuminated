@@ -8,6 +8,7 @@ function getAccessTokenFromCookie() {
         ?.split('=')[1];
 }
 
+
 export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
     const [searchResults, setSearchResults] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
@@ -53,10 +54,10 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                     {[...Array(10)].map((_, i) => (
                         <li key={i} className={styles.loadingPlaceholder}>
-                            <div className={styles.searchResultImageContainer} style={{ background: '#eee', width: 40, height: 40, borderRadius: 4 }} />
+                            <div className={styles.searchResultImageContainer}  />
                             <div>
-                                <div className={styles.trackName} style={{ background: '#eee', width: 120, height: 16, marginBottom: 4 }} />
-                                <div className={styles.artistName} style={{ background: '#eee', width: 80, height: 12 }} />
+                                <div className={styles.trackName}  />
+                                <div className={styles.artistName}  />
                             </div>
                         </li>
                     ))}

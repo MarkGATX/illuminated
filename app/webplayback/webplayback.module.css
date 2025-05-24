@@ -26,6 +26,16 @@
     /* center the image */
 }
 
+.currentTrackInfoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+
+    gap: .5em;
+}
+
 .likeButton {
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -148,6 +158,7 @@
 
 .trackImageContainer {
     height: 54px;
+    width: 54px;
 
     & img {
         /* width: 100%; */
@@ -161,10 +172,17 @@
 .trackInfoContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: 1em;
+    width:calc(100% - 54px);
+
+    
+
 }
+
+.next {
+        padding: 0 0 0 20px;
+    }
 
 .trackName {
     font-size: 2em;

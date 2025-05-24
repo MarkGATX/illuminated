@@ -407,7 +407,7 @@ export default function WebPlayback() {
 
           </div>
 
-          <div className={styles.trackInfoContainer}>
+          <div className={styles.currentTrackInfoContainer}>
             <div className={styles.trackName}>{
               currentTrack?.name || "Unknown Track"
             }</div>
@@ -427,11 +427,11 @@ export default function WebPlayback() {
 
                   />
                 </div>
-                <div>
+                <div className={styles.trackInfoContainer}>
                   <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
                   <p></p>
                 </div>
-                
+
               </div>
             ) : (
               <div className={styles.previousTrackInfo} key={previousTracks[previousTracks.length - 1]?.id || 0} >
@@ -442,7 +442,7 @@ export default function WebPlayback() {
 
                   />
                 </div>
-                <div>
+                <div className={styles.trackInfoContainer}>
                   <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{`${previousTracks[previousTracks.length - 1]?.name}`}</h3>
                   <p>{`${previousTracks[previousTracks.length - 1]?.artists?.[0]?.name}`}</p>
                 </div>
@@ -508,8 +508,8 @@ export default function WebPlayback() {
             </svg>
 
 
-            
-         
+
+
             {nextTracks.length === 0 ? (
               <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
                 <div>
@@ -526,7 +526,7 @@ export default function WebPlayback() {
               </div>
             ) : (
               <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
-                <div>
+                <div className={`${styles.trackInfoContainer} ${styles.next}`}>
                   <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{`${nextTracks[nextTracks.length - 1]?.name}`}</h3>
                   <p>{`${nextTracks[nextTracks.length - 1]?.artists?.[0]?.name}`}</p>
                 </div>

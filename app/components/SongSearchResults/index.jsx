@@ -1,51 +1,3 @@
-// import styles from './songSearchResults.module.css';
-
-// export default function SongSearchResults({ onTrackSelect, searchResults, page, setPage, }) {
-
-//     return (
-
-//         <div className={styles.songResultsContents}>
-//             <ul style={{ listStyle: 'none', padding: 0 }}>
-//                 {searchResults.map(track => (
-//                     <li key={track.id} onClick={() => onTrackSelect && onTrackSelect({ ...track, searchResults })}>
-//                         <div className={styles.searchResultImageContainer}>
-//                             <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
-//                         </div>
-//                         <div>
-//                             <div className={styles.trackName}>{track.name}</div>
-//                             <div className={styles.artistName}>{track.artists?.map(a => a.name).join(', ')}</div>
-//                         </div>
-//                     </li>
-//                 ))}
-//             </ul>
-//             <div className={styles.paginationWrapper}>
-//                 <svg
-//                     width="36" height="36" viewBox="0 0 36 36" fill="none"
-//                     xmlns="http://www.w3.org/2000/svg" aria-label="Previous"
-//                     className={styles.paginationButton + ' ' + (page === 0 ? styles.paginationDisabled : '')}
-//                     onClick={() => {
-//                         if (page > 0) setPage(p => { const newPage = p - 1; handleSearch(query, newPage); return newPage; });
-//                     }}
-//                 >
-//                     <polygon points="24,8 12,18 24,28" fill="currentColor" />
-//                 </svg>
-//                 <span className={styles.paginationPageInfo}>Page {page + 1} / 3</span>
-//                 <svg
-//                     width="36" height="36" viewBox="0 0 36 36" fill="none"
-//                     xmlns="http://www.w3.org/2000/svg" aria-label="Next"
-//                     className={styles.paginationButton + ' ' + ((searchResults.length < 10 || page >= 2) ? styles.paginationDisabled : '')}
-//                     onClick={() => {
-//                         if (searchResults.length === 10 && page < 2) setPage(p => { const newPage = p + 1; handleSearch(query, newPage); return newPage; });
-//                     }}
-//                 >
-//                     <polygon points="12,8 24,18 12,28" fill="currentColor" />
-//                 </svg>
-//             </div>
-//         </div>
-
-//     )
-// }
-
 import React, { useState, useEffect } from 'react';
 import styles from './songSearchResults.module.css';
 
@@ -78,6 +30,7 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                 );
                 if (!res.ok) throw new Error('Search failed');
                 const data = await res.json();
+                console.log('tracks: ', data);
                 if (!ignore) setSearchResults(data.tracks?.items || []);
             } catch (err) {
                 if (!ignore) setSearchError(err.message);
@@ -100,10 +53,10 @@ export default function SongSearchResults({ query, onTrackSelect }) {
                         {[...Array(10)].map((_, i) => (
                             <li key={i} className={styles.loadingPlaceholder}>
                                 {/* Placeholder content, e.g. skeleton loader */}
-                                <div className={styles.searchResultImageContainer} style={{ background: '#eee', width: 40, height: 40, borderRadius: 4 }} />
+                                <div className={styles.searchResultImageContainer}  />
                                 <div>
-                                    <div className={styles.trackName} style={{ background: '#eee', width: 120, height: 16, marginBottom: 4 }} />
-                                    <div className={styles.artistName} style={{ background: '#eee', width: 80, height: 12 }} />
+                                    <div className={styles.trackName}  />
+                                    <div className={styles.artistName}  />
                                 </div>
                             </li>
                         ))}

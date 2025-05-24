@@ -104,6 +104,14 @@ export default function SearchBar({ onTrackSelect }) {
         setSubmittedQuery(query); // Only update on submit
     };
 
+    // Handler to play a playlist by passing a special object
+    const handlePlaylistSelect = (playlist) => {
+        if (playlist && playlist.uri) {
+            // Pass a special object to onTrackSelect with a playlistUri property
+            onTrackSelect({ playlistUri: playlist.uri });
+        }
+    };
+
     return (
         <div className={styles.searchContainer}>
             <form onSubmit={handleSubmit} className={styles.searchBar}>
@@ -136,7 +144,7 @@ export default function SearchBar({ onTrackSelect }) {
                         <h2 className={styles.playlistResultsTitle}>Playlists</h2>
                         <PlaylistSearchResults
                             query={submittedQuery}
-                            onPlaylistSelect={onTrackSelect}
+                            onPlaylistSelect={handlePlaylistSelect}
                         />
                     </div>
                 </div>

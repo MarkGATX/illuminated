@@ -1,3 +1,21 @@
+.loadingPlaceholder {
+
+    /* Shimmer animation */
+    background: linear-gradient(90deg, #f5e1e1 25%, #fbe9e7 50%, #f5e1e1 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
 .paginationWrapper {
     display: flex;
     flex-direction: row;
@@ -15,7 +33,7 @@
     width: 80dvw;
     max-height: 50vh;
     position: relative;
-    margin:5em 0 0 0 ;
+    margin: 5em 0 0 0;
     /* overflow-y: auto; */
 
     & ul {
@@ -89,7 +107,7 @@
 }
 
 .songResultsContents {
-    width:100%;
+    width: 100%;
 }
 
 .songResultsTitle {
