@@ -419,7 +419,20 @@ export default function WebPlayback() {
 
           <div className={styles.playButtonsContainer}>
             {previousTracks.length === 0 ? (
-              <div> None</div>
+              <div className={styles.previousTrackInfo}>
+                <div className={styles.trackImageContainer}>
+                  <img
+                    src='/fallback.webp'
+                    alt="Album Art"
+
+                  />
+                </div>
+                <div>
+                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
+                  <p></p>
+                </div>
+                
+              </div>
             ) : (
               <div className={styles.previousTrackInfo} key={previousTracks[previousTracks.length - 1]?.id || 0} >
                 <div className={styles.trackImageContainer}>
@@ -495,12 +508,26 @@ export default function WebPlayback() {
             </svg>
 
 
+            
+         
             {nextTracks.length === 0 ? (
-              <span> None</span>
+              <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
+                <div>
+                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
+                  <p></p>
+                </div>
+                <div className={styles.trackImageContainer}>
+                  <img
+                    src='/fallback.webp'
+                    alt="Album Art"
+
+                  />
+                </div>
+              </div>
             ) : (
               <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
                 <div>
-                  <h3>{`${nextTracks[nextTracks.length - 1]?.name}`}</h3>
+                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{`${nextTracks[nextTracks.length - 1]?.name}`}</h3>
                   <p>{`${nextTracks[nextTracks.length - 1]?.artists?.[0]?.name}`}</p>
                 </div>
                 <div className={styles.trackImageContainer}>
@@ -512,6 +539,7 @@ export default function WebPlayback() {
                 </div>
               </div>
             )}
+
 
           </div>
 
