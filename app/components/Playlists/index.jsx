@@ -60,7 +60,7 @@ export default function Playlists() {
 
     return (
         <div className={styles.playlistsRow}>
-            <h2 className={styles.playlistsTitle}>Playlists</h2>
+            <h2 className={styles.playlistsTitle}>My Playlists</h2>
             <svg
                 className={styles.arrowSvg}
                 width="42" height="42" viewBox="0 0 28 28" fill="#f5e1e1"
@@ -91,7 +91,7 @@ export default function Playlists() {
                     <li key={playlist.id} className={styles.playlistCard}>
                         <div className={styles.playlistImageContainer}>
                             <img
-                                src={playlist.images?.[0]?.url || '/fallback.webp'}
+                                src={playlist?.images?.[0]?.url || '/fallback.webp'}
                                 alt={playlist.name}
                                 className={styles.playlistImage}
                             />

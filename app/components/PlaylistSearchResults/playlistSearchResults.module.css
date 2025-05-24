@@ -8,70 +8,15 @@
     padding: 1em 0;
 }
 
-.playlistResultsContainer {
-    position: relative;
-    width:45%;
-}
-
-.playlistResultsTitle {
-    position: absolute;
-    top: -1em;
-    left: -.5em;
-    opacity: 50%;
-    font-size: 5em;
-    z-index: -1;
-}
-
-.searchBar {
-    display: flex;
-    flex-direction: row;
-    gap: .5em;
-    width: 50%;
-
-    & input {
-        flex: 1;
-        padding: 0.5em;
-        border-radius: 4px;
-        border: 1px solid #f5e1e1;
-    }
-}
-
-.searchButton {
-    padding: .5em;
-    flex: 0 0 auto;
-    width: auto;
-    min-width: unset;
-    align-self: flex-end;
-}
-
-.searchContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1em;
-    width: 80dvw;
-    padding:0 0 3em 0;
-}
-
-.searchInput {
-    flex: 1 1 auto;
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-
 .searchResults {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 1em;
     width: 80dvw;
     max-height: 50vh;
     position: relative;
     margin:5em 0 0 0 ;
-    justify-content: space-between;
-
+    /* overflow-y: auto; */
 
     & ul {
         width: 100%;
@@ -102,8 +47,8 @@
             gap: .5em;
         }
 
-        /* Truncate long track names inside li */
-        & li .trackName {
+        /* Truncate long playlist names inside li */
+        & li .playlistName {
             flex: 1 1 auto;
             min-width: 0;
             overflow: hidden;
@@ -143,12 +88,11 @@
     left: 0;
 }
 
-.songResultsContainer {
-    width:45%;
-    position: relative ;
+.playlistResultsContents {
+    width:100%;
 }
 
-.songResultsTitle {
+.playlistResultsTitle {
     position: absolute;
     top: -1em;
     left: -.5em;
@@ -157,7 +101,7 @@
     z-index: -1;
 }
 
-.artistName {
+.ownerName {
     font-size: 0.85em;
     color: #888;
     overflow: hidden;

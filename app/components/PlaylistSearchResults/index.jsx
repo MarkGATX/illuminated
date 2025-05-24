@@ -1,0 +1,113 @@
+import React, { useState, useEffect } from 'react';
+import styles from './playlistSearchResults.module.css';
+
+function getAccessTokenFromCookie() {
+    return document.cookie
+        .split('; ')
+        .find(row => row.startsWith('access_token'))
+        ?.split('=')[1];
+}
+
+export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [searchError, setSearchError] = useState(null);
+    const [page, setPage] = useState(0);
+
+    // Fetch results when query or page changes
+    useEffect(() => {
+        if (!query) return;
+        let ignore = false;
+        async function fetchResults() {
+            setSearchLoading(true);
+            setSearchError(null);
+            try {
+                const accessToken = getAccessTokenFromCookie();
+                const offset = page * 10;
+                const res = await fetch(
+                    `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=playlist&limit=10&offset=${offset}`,
+                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                );
+                if (!res.ok) throw new Error('Search failed');
+                const data = await res.json();
+                console.log('playlists: ', data);
+                if (!ignore) setSearchResults(data.playlists?.items || []);
+            } catch (err) {
+                if (!ignore) setSearchError(err.message);
+            } finally {
+                if (!ignore) setSearchLoading(false);
+            }
+        }
+        fetchResults();
+        return () => { ignore = true; };
+    }, [query, page]);
+
+    // Reset page to 0 if query changes
+    useEffect(() => { setPage(0); }, [query]);
+
+    console.log('searchResults: ', searchResults);
+
+    return (
+        <div className={styles.playlistResultsContents}>
+            {searchLoading &&
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                    {[...Array(10)].map((_, i) => (
+                        <li key={i} className={styles.loadingPlaceholder}>
+                            <div className={styles.searchResultImageContainer} style={{ background: '#eee', width: 40, height: 40, borderRadius: 4 }} />
+                            <div>
+                                <div className={styles.trackName} style={{ background: '#eee', width: 120, height: 16, marginBottom: 4 }} />
+                                <div className={styles.artistName} style={{ background: '#eee', width: 80, height: 12 }} />
+                            </div>
+                        </li>
+                    ))}
+                </ul>}
+            {searchError && <div style={{ color: 'red' }}>Error: {searchError}</div>}
+
+            {(!searchLoading && !searchError) && (
+                <>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {/* Sort results to ensure empty slots are at the end */}
+                        {[...searchResults].sort((a, b) => {
+                            if (a && !b) return -1;
+                            if (!a && b) return 1;
+                            return 0;
+                        }).map((playlist, index) => (
+                            playlist ? (
+                                <li key={playlist.id} onClick={() => onPlaylistSelect && onPlaylistSelect(playlist)}>
+                                    <div className={styles.searchResultImageContainer}>
+                                        <img src={playlist.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
+                                    </div>
+                                    <div>
+                                        <div className={styles.trackName}>{playlist.name}</div>
+                                        <div className={styles.artistName}>{playlist.owner?.display_name}</div>
+                                    </div>
+                                </li>
+                            ) : (
+                                <li key={`empty-${index}`} style={{ visibility: 'hidden' }}></li>
+                            )
+                        ))}
+                    </ul>
+                    <div className={styles.paginationWrapper}>
+                        <svg
+                            width="36" height="36" viewBox="0 0 36 36" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" aria-label="Previous"
+                            className={`${styles.paginationButton} ${page === 0 ? styles.paginationDisabled : ''}`}
+                            onClick={() => page > 0 && setPage(page - 1)}
+                        >
+                            <polygon points="24,8 12,18 24,28" fill="currentColor" />
+                        </svg>
+                        <span className={styles.paginationPageInfo}>Page {page + 1} / 3</span>
+                        <svg
+                            width="36" height="36" viewBox="0 0 36 36" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" aria-label="Next"
+                            className={`${styles.paginationButton} ${(searchResults.length < 10 || page >= 2) ? styles.paginationDisabled : ''}`}
+                            onClick={() => (searchResults.length === 10 && page < 2) && setPage(page + 1)}
+                        >
+                            <polygon points="12,8 24,18 12,28" fill="currentColor" />
+                        </svg>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+}

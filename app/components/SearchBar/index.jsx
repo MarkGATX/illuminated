@@ -91,6 +91,7 @@
 import React, { useState } from 'react';
 import styles from './searchBar.module.css';
 import SongSearchResults from '../SongSearchResults';
+import PlaylistSearchResults from '../PlaylistSearchResults';
 
 export default function SearchBar({ onTrackSelect }) {
     const [query, setQuery] = useState('');
@@ -124,11 +125,20 @@ export default function SearchBar({ onTrackSelect }) {
             </form>
             {submittedQuery && (
                 <div className={styles.searchResults}>
-                    <h2 className={styles.songResultsTitle}>Songs</h2>
-                    <SongSearchResults
-                        query={submittedQuery}
-                        onTrackSelect={onTrackSelect}
-                    />
+                    <div className={styles.songResultsContainer}>
+                        <h2 className={styles.songResultsTitle}>Songs</h2>
+                        <SongSearchResults
+                            query={submittedQuery}
+                            onTrackSelect={onTrackSelect}
+                        />
+                    </div>
+                    <div className={styles.playlistResultsContainer}>
+                        <h2 className={styles.playlistResultsTitle}>Playlists</h2>
+                        <PlaylistSearchResults
+                            query={submittedQuery}
+                            onPlaylistSelect={onTrackSelect}
+                        />
+                    </div>
                 </div>
             )}
         </div>
