@@ -27,6 +27,8 @@ export default function WebPlayback() {
   const [deviceId, setDeviceId] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [oklchColorsArray, setOklchColorsArray] = useState([]);
+  const [previousTracks, setPreviousTracks] = useState([]);
+  const [nextTracks, setNextTracks] = useState([]);
   const animationRef = useRef();
   const albumArtUrl = currentTrack?.album?.images[0]?.url || '/fallback.webp';
   const { colors } = useExtractColors(albumArtUrl, {
@@ -208,6 +210,8 @@ export default function WebPlayback() {
         if (!state || !state.track_window || !state.track_window.current_track) return;
         setCurrentTrack(state.track_window.current_track);
         setPaused(state.paused);
+        setPreviousTracks(state.track_window.previous_tracks || []);
+        setNextTracks(state.track_window.next_tracks || []);
         newPlayer.getCurrentState().then(state => {
           setActive(!!state);
         });
@@ -414,6 +418,23 @@ export default function WebPlayback() {
           </div>
 
           <div className={styles.playButtonsContainer}>
+            {previousTracks.length === 0 ? (
+              <div> None</div>
+            ) : (
+              <div className={styles.previousTrackInfo} key={previousTracks[previousTracks.length - 1]?.id || 0} >
+                <div className={styles.trackImageContainer}>
+                  <img
+                    src={previousTracks[previousTracks.length - 1]?.album?.images?.[0]?.url || '/fallback.webp'}
+                    alt="Album Art"
+
+                  />
+                </div>
+                <div>
+                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{`${previousTracks[previousTracks.length - 1]?.name}`}</h3>
+                  <p>{`${previousTracks[previousTracks.length - 1]?.artists?.[0]?.name}`}</p>
+                </div>
+              </div>
+            )}
             {/* Previous Track: Two left chevrons */}
             <svg
               width="36" height="36" viewBox="0 0 36 36" fill="none"
@@ -428,7 +449,7 @@ export default function WebPlayback() {
               <polygon points="20,8 12,18 20,28" fill="currentColor" />
               <polygon points="28,8 20,18 28,28" fill="currentColor" />
             </svg>
-
+            {/* </div> */}
             {/* Play/Pause SVGs (unchanged logic, color updated) */}
             {!is_active || is_paused ? (
               <svg
@@ -458,7 +479,6 @@ export default function WebPlayback() {
                 <rect x="31.5" y="15" width="6" height="24" rx="1.5" fill="currentColor" />
               </svg>
             )}
-
             {/* Next Track: Two right chevrons */}
             <svg
               width="36" height="36" viewBox="0 0 36 36" fill="none"
@@ -473,8 +493,31 @@ export default function WebPlayback() {
               <polygon points="16,8 24,18 16,28" fill="currentColor" />
               <polygon points="8,8 16,18 8,28" fill="currentColor" />
             </svg>
+
+
+            {nextTracks.length === 0 ? (
+              <span> None</span>
+            ) : (
+              <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
+                <div>
+                  <h3>{`${nextTracks[nextTracks.length - 1]?.name}`}</h3>
+                  <p>{`${nextTracks[nextTracks.length - 1]?.artists?.[0]?.name}`}</p>
+                </div>
+                <div className={styles.trackImageContainer}>
+                  <img
+                    src={nextTracks[nextTracks.length - 1]?.album?.images?.[0]?.url || '/fallback.webp'}
+                    alt="Album Art"
+
+                  />
+                </div>
+              </div>
+            )}
+
           </div>
-          <SearchBar />
+
+
+
+          <SearchBar onTrackSelect={playTrack} />
         </div>
       </main>
     </>

@@ -5,7 +5,7 @@ const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
 export async function POST() {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const refresh_token = cookieStore.get('refresh_token')?.value;
 
     if (!refresh_token) {

@@ -1,10 +1,4 @@
-.playlistsRow {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 80%;
-    gap: 0.5em;
-}
+
 
 /* Hide scrollbar for all browsers */
 .playlistsList {
@@ -27,7 +21,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 80%;
+    width: 80dvw;
     gap: 0.5em;
     position: relative;
     justify-content: center;
@@ -44,7 +38,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1em;
-    width:80%;
+    width:75%;
     
 
 
@@ -97,7 +91,7 @@
 .playlistsTitle {
     position:absolute;
     top:-1em;
-    left:-1em;
+    left:-.5em;
     opacity:50%;
     font-size:5em;
     z-index: -1;
