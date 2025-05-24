@@ -23,6 +23,7 @@ export async function GET() {
     scope: scope,
     redirect_uri: spotify_redirect_uri,
     state: state,
+    show_dialog: 'true',
   });
 
   const authorizationUrl = `https://accounts.spotify.com/authorize?${params}`;
@@ -34,4 +35,14 @@ export async function GET() {
   console.log('SPOTIFY_AUTH_URL:', authorizationUrl);
 
   return NextResponse.redirect(authorizationUrl);
+}
+
+// Helper to check if user is premium (to be used after callback)
+export async function checkSpotifyPremium(accessToken) {
+  const res = await fetch('https://api.spotify.com/v1/me', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) return false;
+  const data = await res.json();
+  return data.product === 'premium';
 }

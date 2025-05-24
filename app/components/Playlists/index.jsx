@@ -55,7 +55,7 @@ export default function Playlists({ playPlaylist }) {
         };
     }, [playlists]);
 
-        // Handler to play a playlist by passing a special object
+    // Handler to play a playlist by passing a special object
     const handlePlaylistSelect = (playlist) => {
         if (playlist && playlist.uri) {
             // Pass a special object to onTrackSelect with a playlistUri property
@@ -63,7 +63,26 @@ export default function Playlists({ playPlaylist }) {
         }
     };
 
-    if (loading) return <div>Loading playlists...</div>;
+    if (loading) return (
+        <div className={styles.playlistsRow}>
+            <ul id="playlists-list" className={styles.playlistsList} >
+
+                <li className={styles.playlistCard}>
+                    <div className={styles.playlistImageContainer}>
+                        <img
+                            src='/fallback.webp'
+                            alt=''
+                            className={styles.playlistImage}
+                        />
+                    </div>
+                    <div className={styles.playlistName}>
+                        Loading...
+                    </div>
+                </li>
+            </ul>
+        </div>
+    )
+ 
     if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
     return (

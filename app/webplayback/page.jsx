@@ -30,6 +30,7 @@ export default function WebPlayback() {
   const [oklchColorsArray, setOklchColorsArray] = useState([]);
   const [previousTracks, setPreviousTracks] = useState([]);
   const [nextTracks, setNextTracks] = useState([]);
+  const [isPremium, setIsPremium] = useState(null);
   const animationRef = useRef();
   const albumArtUrl = currentTrack?.album?.images[0]?.url || '/fallback.webp';
   const { colors } = useExtractColors(albumArtUrl, {
@@ -262,34 +263,40 @@ export default function WebPlayback() {
     }
   }, [colors]);
 
-  // Fisher-Yates shuffle
-  // function fisherYatesShuffle(array) {
-  //   const arr = array.slice();
-  //   for (let i = arr.length - 1; i > 0; i--) {
-  //     const j = Math.floor(Math.random() * (i + 1));
-  //     [arr[i], arr[j]] = [arr[j], arr[i]];
-  //   }
-  //   return arr;
-  // }
+  // Check Premium status on mount
+  useEffect(() => {
+    const checkPremium = async () => {
+      const accessToken = getAccessTokenFromCookie();
+      if (!accessToken) {
+        setIsPremium(false);
+        return;
+      }
+      try {
+        const res = await fetch('https://api.spotify.com/v1/me', {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (!res.ok) {
+          setIsPremium(false);
+          return;
+        }
+        const data = await res.json();
+        setIsPremium(data.product === 'premium');
+      } catch {
+        setIsPremium(false);
+      }
+    };
+    checkPremium();
+  }, []);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   // Animate color changes every 3 seconds
-  //   const interval = setInterval(() => {
-  //     if (!colors || colors.length === 0) return;
-  //     // Fisher-Yates shuffle for animation effect
-  //     const shuffledColors = fisherYatesShuffle(colors);
-  //     const arr = getOklchColorArray(shuffledColors);
-  //     if (isMounted) {
-  //       setOklchColorsArray(arr);
-  //     }
-  //   }, 5000);
-  //   return () => {
-  //     isMounted = false;
-  //     clearInterval(interval);
-  //   };
-  // }, [colors]);
 
+  // If not premium, show message and don't render app
+  if (isPremium === false) {
+    return (
+      <main className={styles.mainWrapper}>
+        <h2 style={{ textAlign: 'center', marginTop: '4em', color: '#a12d2d' }}>You must be a Spotify Premium member to access this application.</h2>
+      </main>
+    );
+  }
 
   // Play a track or playlist on the current device
   const playTrack = async (item) => {
@@ -479,7 +486,7 @@ export default function WebPlayback() {
 
 
             {nextTracks.length === 0 ? (
-              <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
+              <div key={nextTracks[0]?.id || 0} className={styles.nextTrackInfo}>
                 <div>
                   <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
                   <p></p>
@@ -493,14 +500,14 @@ export default function WebPlayback() {
                 </div>
               </div>
             ) : (
-              <div key={nextTracks[nextTracks.length - 1]?.id || 0} className={styles.nextTrackInfo}>
+              <div key={nextTracks[0]?.id || 0} className={styles.nextTrackInfo}>
                 <div className={`${styles.trackInfoContainer} ${styles.next}`}>
-                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{`${nextTracks[nextTracks.length - 1]?.name}`}</h3>
-                  <p>{`${nextTracks[nextTracks.length - 1]?.artists?.[0]?.name}`}</p>
+                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{`${nextTracks[0]?.name}`}</h3>
+                  <p>{`${nextTracks[0]?.artists?.[0]?.name}`}</p>
                 </div>
                 <div className={styles.trackImageContainer}>
                   <img
-                    src={nextTracks[nextTracks.length - 1]?.album?.images?.[0]?.url || '/fallback.webp'}
+                    src={nextTracks[0]?.album?.images?.[0]?.url || '/fallback.webp'}
                     alt="Album Art"
 
                   />
