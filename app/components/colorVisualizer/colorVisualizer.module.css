@@ -25,6 +25,11 @@
     border-radius: 6px;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     filter: blur(20px);
+    width: 50px;
+    height: calc(100dvh / 10);
+    min-width: 8px;
+    max-width: 100%;
+    transition: all 5s linear;
 
 }
 

@@ -1,38 +1,3 @@
-// 'use client';
-
-// import { useSearchParams } from 'next/navigation';
-// import { useEffect, useState } from 'react';
-// import { handleSpotifyCallback } from '../callback/actions';
-
-// export default function SpotifyCallback() {
-//   const searchParams = useSearchParams();
-//   const [status, setStatus] = useState(null);
-
-//   useEffect(() => {
-//     async function fetchAccessToken() {
-//       const result = await handleSpotifyCallback(searchParams);
-
-//       if (result.error) {
-//         console.error(result.error);
-//         setStatus('Error: ' + result.error);
-//       } else {
-//         console.log('Access Token:', result.access_token);
-//         setStatus('Success! Access token retrieved.');
-//       }
-//     }
-
-//     fetchAccessToken();
-//   }, [searchParams]);
-
-//   return (
-//     <div>
-//       <h1>Spotify Callback</h1>
-//       <p>{status}</p>
-//     </div>
-//   );
-// }
-// app/callback/page.jsx
-
 // app/api/auth/callback/route.js
 import { NextResponse } from 'next/server';
 import { handleSpotifyCallback } from './actions';
