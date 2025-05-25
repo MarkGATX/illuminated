@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotify_redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
+const host=process.env.NEXT_PUBLIC_HOST || 'http://127.0.0.1:3000';
 
 // Define the server action
 export async function handleSpotifyCallback(searchParams) {
@@ -14,11 +15,13 @@ export async function handleSpotifyCallback(searchParams) {
   if (!code) {
     return { error: 'Authorization code missing', status: 400 };
   }
+  console.log(host)
 
   const params = new URLSearchParams({
     grant_type: 'authorization_code',
     code: code,
-    redirect_uri: spotify_redirect_uri,
+    // redirect_uri: spotify_redirect_uri,
+    redirect_uri: `${host}/api/auth/callback`,
   });
 
   try {

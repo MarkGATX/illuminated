@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
+const host = process.env.NEXT_PUBLIC_HOST || 'http://127.0.0.1:3000';
 
 const generateRandomString = (length) => {
   var text = '';
@@ -21,7 +22,8 @@ export async function GET() {
     response_type: 'code',
     client_id: spotify_client_id,
     scope: scope,
-    redirect_uri: spotify_redirect_uri,
+    // redirect_uri: spotify_redirect_uri,
+    redirect_uri: `${host}/api/auth/callback`,
     state: state,
     show_dialog: 'true',
   });
