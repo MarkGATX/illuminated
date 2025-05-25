@@ -4,8 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Login from './login';
 import WebPlayback from './webplayback/page';
 
+const host = process.env.NEXT_PUBLIC_HOST || 'http://127.0.0.1:3000';
+
 async function getToken() {
-  const res = await fetch('http://127.0.0.1:3000/api/auth/token');
+  const res = await fetch(`${host}/api/auth/token`);
   return res.json();
 }
 
