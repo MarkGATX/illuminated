@@ -6,7 +6,8 @@ import WebPlayback from './webplayback/page';
 import { redirect } from 'next/dist/server/api-utils';
 
 async function getToken() {
-  const redirectURI = process.env.SPOTIFY_REDIRECT_URI
+  const redirectURI = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI
+  console.log('redirectURI = ', redirectURI);
   // const res = await fetch('http://localhost:3000/api/auth/token');
   // const res = await fetch('http://127.0.0.1:3000/api/auth/token');
     const res = await fetch(redirectURI);
