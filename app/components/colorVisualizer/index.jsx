@@ -51,11 +51,6 @@ export default function ColorVisualizer({ colors }) {
                         style={{
                             background: color,
                             boxShadow: `${color} 0 0 50px`,
-                            width: `50px`,
-                            height: `calc(100dvh / 10)`,
-                            minWidth: '8px',
-                            maxWidth: '100%',
-                            transition: 'all 5s linear'
                         }}
                     />
                 ))}
@@ -68,11 +63,7 @@ export default function ColorVisualizer({ colors }) {
                         style={{
                             background: color,
                             boxShadow: `${color} 0 0 50px`,
-                            width: `50px`,
-                            height: `calc(100dvh / 10)`,
-                            minWidth: '8px',
-                            maxWidth: '100%',
-                            transition: 'all 5s linear'
+
                         }}
                     />
                 ))}

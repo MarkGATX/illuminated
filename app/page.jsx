@@ -5,7 +5,8 @@ import Login from './login';
 import WebPlayback from './webplayback/page';
 
 async function getToken() {
-  const res = await fetch('http://localhost:3000/api/auth/token');
+  // const res = await fetch('http://localhost:3000/api/auth/token');
+  const res = await fetch('http://127.0.0.1:3000/api/auth/token');
   return res.json();
 }
 

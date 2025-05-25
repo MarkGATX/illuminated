@@ -152,8 +152,9 @@ export default function WebPlayback() {
         ?.split('=')[1];
       console.log(document.cookie)
       if (!accessToken) {
-        console.error("No access token found");
-        window.location.href = "/";
+        console.error("No access token found", accessToken);
+        alert('pause for debugging')
+        // window.location.href = "/";
         return;
       }
 
@@ -269,17 +270,23 @@ export default function WebPlayback() {
       const accessToken = getAccessTokenFromCookie();
       if (!accessToken) {
         setIsPremium(false);
+        alert('pause for debugging')
         return;
       }
       try {
         const res = await fetch('https://api.spotify.com/v1/me', {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
+
+        console.log('Premium check response:', res);
+        // debugger;
         if (!res.ok) {
           setIsPremium(false);
           return;
         }
         const data = await res.json();
+        console.log(data)
+        // debugger;
         setIsPremium(data.product === 'premium');
       } catch {
         setIsPremium(false);
@@ -300,7 +307,7 @@ export default function WebPlayback() {
 
   // Play a track or playlist on the current device
   const playTrack = async (item) => {
-    if (!deviceId || (!item?.uri && !item?.playlistUri)) {
+    if (!deviceId || (!item?.track && !item?.playlistUri && !item?.uri)) {
       alert('No device or track/playlist selected!');
       return;
     }
@@ -315,6 +322,21 @@ export default function WebPlayback() {
         },
         body: JSON.stringify({
           context_uri: item.playlistUri
+        })
+      });
+      return;
+    }
+    // If item has albumUri and track, play album context starting from track
+    if (item.albumUri && item.track) {
+      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          context_uri: item.albumUri,
+          offset: { uri: item.track.uri }
         })
       });
       return;
@@ -343,7 +365,7 @@ export default function WebPlayback() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ uris: [item.uri] })
+      body: JSON.stringify({ uris: [item.uri || (item.track && item.track.uri)] })
     });
   };
 
