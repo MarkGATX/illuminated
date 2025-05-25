@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Login from './login';
 import WebPlayback from './webplayback/page';
+import { redirect } from 'next/dist/server/api-utils';
 
 async function getToken() {
+  const redirectURI = process.env.SPOTIFY_REDIRECT_URI
   // const res = await fetch('http://localhost:3000/api/auth/token');
   // const res = await fetch('http://127.0.0.1:3000/api/auth/token');
-    const res = await fetch('https://illuminated-sigma.vercel.app/api/auth/token');
+    const res = await fetch(redirectURI);
 
   return res.json();
 }
