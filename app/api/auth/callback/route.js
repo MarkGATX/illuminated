@@ -15,7 +15,7 @@ export async function GET(request) {
   // return NextResponse.json({ success: true });
   // Redirect to your custom web player on success
   const host = request.headers.get('host');
-  const protocol = host && host.startsWith('localhost') ? 'http' : 'http'; // adjust to 'https' if needed
+  const protocol = host && host.startsWith('localhost') ? 'http' : 'https'; // adjust to 'https' if needed
   const webPlayerUrl = `${protocol}://${host}/webplayback`;
   return NextResponse.redirect(webPlayerUrl);
 }
