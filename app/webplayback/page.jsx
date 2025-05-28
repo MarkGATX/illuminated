@@ -119,6 +119,8 @@ export default function WebPlayback() {
       const refreshData = await refreshRes.json();
       if (refreshData.access_token) {
         accessToken = refreshData.access_token;
+        // Update the cookie so future requests use the new token
+        document.cookie = `access_token=${accessToken}; path=/;`;
         // Retry the original request
         response = await fetch(url, {
           ...options,
