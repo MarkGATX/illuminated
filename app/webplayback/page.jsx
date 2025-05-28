@@ -153,7 +153,6 @@ export default function WebPlayback() {
       console.log(document.cookie)
       if (!accessToken) {
         console.error("No access token found", accessToken);
-        alert('pause for debugging')
         // window.location.href = "/";
         return;
       }
@@ -270,7 +269,7 @@ export default function WebPlayback() {
       const accessToken = getAccessTokenFromCookie();
       if (!accessToken) {
         setIsPremium(false);
-        alert('pause for debugging')
+        console.error("No access token found for premium check");
         return;
       }
       try {
@@ -300,7 +299,9 @@ export default function WebPlayback() {
   if (isPremium === false) {
     return (
       <main className={styles.mainWrapper}>
-        <h2 style={{ textAlign: 'center', marginTop: '4em', color: '#a12d2d' }}>You must be a Spotify Premium member to access this application.</h2>
+        <h2 style={{ textAlign: 'center', marginTop: '4em' }}>You must be a Spotify Premium member to access this application.</h2>
+        <button onClick={() => window.location.href = 'https://www.spotify.com/premium/'}>Upgrade to Premium</button>
+        <button onClick={() => window.location.href = '/'}>Go Home</button>
       </main>
     );
   }
