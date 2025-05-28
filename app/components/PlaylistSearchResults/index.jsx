@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { fetchWithRefresh } from '../../utils/spotifyFetch';
 import styles from './playlistSearchResults.module.css';
-
-function getAccessTokenFromCookie() {
-    return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('access_token'))
-        ?.split('=')[1];
-}
 
 export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
     const [searchResults, setSearchResults] = useState([]);
@@ -23,11 +17,9 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
             setSearchLoading(true);
             setSearchError(null);
             try {
-                const accessToken = getAccessTokenFromCookie();
                 const offset = page * 10;
-                const res = await fetch(
-                    `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=playlist&limit=10&offset=${offset}`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                const res = await fetchWithRefresh(
+                    `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=playlist&limit=10&offset=${offset}`
                 );
                 if (!res.ok) throw new Error('Search failed');
                 const data = await res.json();

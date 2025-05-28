@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { fetchWithRefresh } from '../../utils/spotifyFetch';
 import styles from './songSearchResults.module.css';
-
-function getAccessTokenFromCookie() {
-    return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('access_token'))
-        ?.split('=')[1];
-}
 
 export default function SongSearchResults({ query, onTrackSelect }) {
     const [searchResults, setSearchResults] = useState([]);
@@ -23,11 +17,9 @@ export default function SongSearchResults({ query, onTrackSelect }) {
             setSearchLoading(true);
             setSearchError(null);
             try {
-                const accessToken = getAccessTokenFromCookie();
                 const offset = page * 10;
-                const res = await fetch(
-                    `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10&offset=${offset}`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                const res = await fetchWithRefresh(
+                    `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10&offset=${offset}`
                 );
                 if (!res.ok) throw new Error('Search failed');
                 const data = await res.json();
@@ -54,13 +46,10 @@ export default function SongSearchResults({ query, onTrackSelect }) {
     // Helper to play a track and continue with the rest of the album
     async function playAlbumFromTrack(track) {
         try {
-            const accessToken = getAccessTokenFromCookie();
             // Fetch album tracks
             const albumId = track.album?.id;
             if (!albumId) throw new Error('No album ID found');
-            const albumRes = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks?limit=50`, {
-                headers: { Authorization: `Bearer ${accessToken}` }
-            });
+            const albumRes = await fetchWithRefresh(`https://api.spotify.com/v1/albums/${albumId}/tracks?limit=50`);
             if (!albumRes.ok) throw new Error('Failed to fetch album tracks');
             const albumData = await albumRes.json();
             const tracks = albumData.items || [];
@@ -70,9 +59,9 @@ export default function SongSearchResults({ query, onTrackSelect }) {
             // Build play queue from selected track to end of album
             const uris = tracks.slice(startIdx).map(t => t.uri);
             // Start playback
-            await fetch('https://api.spotify.com/v1/me/player/play', {
+            await fetchWithRefresh('https://api.spotify.com/v1/me/player/play', {
                 method: 'PUT',
-                headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ uris })
             });
         } catch (err) {
