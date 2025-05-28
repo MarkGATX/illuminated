@@ -59,7 +59,7 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                         {[...Array(10)].map((_, i) => (
                             <li key={i} className={styles.loadingPlaceholder}>
                                 <div className={styles.searchResultImageContainer} />
-                                <div style={{width:'100%'}}>
+                                <div style={{ width: '100%' }}>
                                     <div className={styles.trackName} />
                                     <div className={styles.artistName} />
                                 </div>
@@ -89,7 +89,11 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                     </div>
                 </>
             }
-            {searchError && <div style={{ color: 'red' }}>Error: {searchError}</div>}
+            {searchError &&
+                <ul>
+                    <li>Error: {searchError}</li>
+                </ul>
+            }
 
             {(!searchLoading && !searchError) && (
                 <>
@@ -105,7 +109,7 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                                     <div className={styles.searchResultImageContainer}>
                                         <img src={playlist?.images?.[0]?.url || '/fallback.webp'} alt="" width={40} height={40} />
                                     </div>
-                                    <div style={{width:'100%'}}>
+                                    <div style={{ width: '100%' }}>
                                         <div className={styles.trackName}>{playlist?.name}</div>
                                         <div className={styles.artistName}>{playlist.owner?.display_name}</div>
                                     </div>
@@ -118,7 +122,7 @@ export default function PlaylistSearchResults({ query, onPlaylistSelect }) {
                         {Array.from({ length: 10 - searchResults.length }).map((_, i) => (
                             <li key={`placeholder-${i}`} className={styles.loadingPlaceholder} style={{ visibility: 'hidden' }}>
                                 <div className={styles.searchResultImageContainer} />
-                                <div style={{width:'100%'}}>
+                                <div style={{ width: '100%' }}>
                                     <div className={styles.trackName} />
                                     <div className={styles.artistName} />
                                 </div>
