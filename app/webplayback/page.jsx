@@ -141,16 +141,24 @@ export default function WebPlayback() {
 
   useEffect(() => {
 
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
+    if (!document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]')) {
+      const script = document.createElement("script");
+      script.src = "https://sdk.scdn.co/spotify-player.js";
+      script.async = true;
 
-    document.body.appendChild(script);
+      document.body.appendChild(script);
+    }
 
     window.onSpotifyWebPlaybackSDKReady = () => {
+      if (!window.Spotify || !window.Spotify.Player) {
+        console.error("Spotify SDK failed to load or is undefined.");
+        alert("Failed to initialize Spotify Player. Please refresh the page or check your network connection.");
+        return;
+      }
+    
       const accessToken = document.cookie
         .split('; ')
-        .find(row => row.startsWith('access_token'))
+      console.log('Cookies:', document.cookie.split('; ').map(cookie => cookie.split('=')[0]))
         ?.split('=')[1];
       console.log(document.cookie)
       if (!accessToken) {
@@ -158,8 +166,7 @@ export default function WebPlayback() {
         // window.location.href = "/";
         return;
       }
-
-
+    
       const newPlayer = new window.Spotify.Player({
         name: 'Web Playback SDK',
         getOAuthToken: async cb => {
@@ -184,7 +191,7 @@ export default function WebPlayback() {
         },
         volume: 0.5
       });
-
+    
       setPlayer(newPlayer);
       console.log('Player set:', newPlayer);
 
@@ -241,13 +248,16 @@ export default function WebPlayback() {
         setIsLiked(false);
         return;
       }
-      const response = await fetchWithRefresh(
-        `https://api.spotify.com/v1/me/tracks/contains?ids=${currentTrack.id}`
-      );
-      if (response && response.ok) {
-        const data = await response.json();
-        setIsLiked(data[0]);
-      } else {
+      try {
+        const response = await fetchWithRefresh(
+          `https://api.spotify.com/v1/me/tracks/contains?ids=${currentTrack.id}`
+        );
+        if (response && response.ok) {
+          const data = await response.json();
+          setIsLiked(Array.isArray(data) && data.length > 0 ? data[0] : false);
+        } 
+      } catch (error) {
+        console.error('Error checking if track is liked:', error);
         setIsLiked(false);
       }
     };

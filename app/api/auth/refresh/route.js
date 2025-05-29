@@ -9,7 +9,8 @@ export async function POST() {
     const refresh_token = cookieStore.get('refresh_token')?.value;
 
     if (!refresh_token) {
-        return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
+        // Redirect to root if no refresh token
+        return NextResponse.redirect('/', 302);
     }
 
     const params = new URLSearchParams({
@@ -27,7 +28,8 @@ export async function POST() {
     });
 
     if (!response.ok) {
-        return NextResponse.json({ error: 'Failed to refresh token' }, { status: 401 });
+        // Redirect to root if refresh fails
+        return NextResponse.redirect('/', 302);
     }
 
     const data = await response.json();
