@@ -503,11 +503,10 @@ export default function WebPlayback() {
               <polygon points="20,8 12,18 20,28" fill="currentColor" />
               <polygon points="28,8 20,18 28,28" fill="currentColor" />
             </svg>
-            {/* </div> */}
             {/* Play/Pause SVGs (unchanged logic, color updated) */}
             {!is_active || is_paused ? (
               <svg
-                width="54" height="54" viewBox="0 0 54 54" fill="none"
+                width="64" height="64" viewBox="0 0 54 54" fill="none"
                 xmlns="http://www.w3.org/2000/svg" aria-label="Play"
                 style={{ cursor: 'pointer' }}
                 onClick={async () => {
@@ -520,7 +519,7 @@ export default function WebPlayback() {
               </svg>
             ) : (
               <svg
-                width="54" height="54" viewBox="0 0 54 54" fill="none"
+                width="64" height="64" viewBox="0 0 54 54" fill="none"
                 xmlns="http://www.w3.org/2000/svg" aria-label="Pause"
                 style={{ cursor: 'pointer' }}
                 onClick={async () => {
@@ -535,7 +534,7 @@ export default function WebPlayback() {
             )}
             {/* Shuffle Button */}
             <svg
-              width="36" height="36" viewBox="0 0 100 100" fill="none"
+              width="48" height="48" viewBox="0 0 100 100" fill="none"
               xmlns="http://www.w3.org/2000/svg" aria-label="Shuffle"
               style={{              
                 background: isShuffling ? '#f5f5f5' : undefined,
