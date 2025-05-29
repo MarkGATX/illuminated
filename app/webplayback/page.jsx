@@ -318,14 +318,12 @@ export default function WebPlayback() {
       alert('No device or track/playlist selected!');
       return;
     }
-    const accessToken = getAccessTokenFromCookie();
     // If item is a playlist (from playlist search)
     if (item.playlistUri) {
-      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      await fetchWithRefresh(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           context_uri: item.playlistUri
@@ -335,11 +333,10 @@ export default function WebPlayback() {
     }
     // If item has albumUri and track, play album context starting from track
     if (item.albumUri && item.track) {
-      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      await fetchWithRefresh(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           context_uri: item.albumUri,
@@ -352,11 +349,10 @@ export default function WebPlayback() {
     if (window.lastSearchResults && Array.isArray(window.lastSearchResults)) {
       const uris = window.lastSearchResults.map(t => t.uri);
       const offset = uris.indexOf(item.uri);
-      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      await fetchWithRefresh(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           uris,
@@ -366,11 +362,10 @@ export default function WebPlayback() {
       return;
     }
     // Fallback: play just the single track
-    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+    await fetchWithRefresh(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ uris: [item.uri || (item.track && item.track.uri)] })
     });
@@ -382,13 +377,11 @@ export default function WebPlayback() {
       alert('No device connected!');
       return;
     }
-    const accessToken = getAccessTokenFromCookie();
     const newShuffleState = !isShuffling;
-    await fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${newShuffleState}&device_id=${deviceId}`, {
+    await fetchWithRefresh(`https://api.spotify.com/v1/me/player/shuffle?state=${newShuffleState}&device_id=${deviceId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
       },
     });
     setIsShuffling(newShuffleState);
@@ -398,10 +391,7 @@ export default function WebPlayback() {
   useEffect(() => {
     const fetchShuffleState = async () => {
       if (!deviceId) return;
-      const accessToken = getAccessTokenFromCookie();
-      const res = await fetch(`https://api.spotify.com/v1/me/player`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
+      const res = await fetchWithRefresh(`https://api.spotify.com/v1/me/player`);
       if (res.ok) {
         const data = await res.json();
         setIsShuffling(!!data.shuffle_state);
