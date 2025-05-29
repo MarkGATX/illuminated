@@ -82,7 +82,7 @@ export default function Playlists({ playPlaylist }) {
             </ul>
         </div>
     )
- 
+
     if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
     return (
@@ -113,26 +113,32 @@ export default function Playlists({ playPlaylist }) {
             >
                 <polygon points="18,6 10,14 18,22" strokeWidth="2" />
             </svg>
-            <ul id="playlists-list" className={styles.playlistsList} ref={listRef}>
-                {playlists.map(playlist => (
-                    <li
-                        key={playlist.id}
-                        className={styles.playlistCard}
-                        onClick={() => handlePlaylistSelect(playlist)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <div className={styles.playlistImageContainer}>
-                            <img
-                                src={playlist?.images?.[0]?.url || '/fallback.webp'}
-                                alt={playlist.name}
-                                className={styles.playlistImage}
-                            />
-                        </div>
-                        <div className={styles.playlistName}>
-                            {playlist.name}</div>
-                    </li>
-                ))}
-            </ul>
+            <div className={styles.scrollContainer}>
+                <ul id="playlists-list" className={styles.playlistsList} ref={listRef}>
+                    <li className={styles.spacerItem}></li>
+                    {playlists.map(playlist => (
+                        <li
+                            key={playlist.id}
+                            className={styles.playlistCard}
+                            onClick={() => handlePlaylistSelect(playlist)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <div className={styles.playlistImageContainer}>
+                                <img
+                                    src={playlist?.images?.[0]?.url || '/fallback.webp'}
+                                    alt={playlist.name}
+                                    className={styles.playlistImage}
+                                />
+                            </div>
+                            <div className={styles.playlistName}>
+                                {playlist.name}</div>
+                        </li>
+                    ))}
+                    <li className={styles.spacerItem}></li>
+                </ul>
+                <div className={`${styles.fade} ${styles.fadeLeft}`}></div>
+                <div className={`${styles.fade} ${styles.fadeRight}`}></div>
+            </div>
             <svg
                 className={styles.arrowSvg}
                 width="42" height="42" viewBox="0 0 28 28" fill="#f5e1e1"

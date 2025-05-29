@@ -1,15 +1,15 @@
 :root {
-  --dark: #00061D;
+  --dark: oklch(0.1324 0.0541 260.04);
   /* Added missing '#' */
-  --light: #f5e1e1;
+  --light: oklch(0.9259 0.022 17.56);
   /* Added missing ';' */
 
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --dark: #00061D;
-    --foreground: #ffffff;
+    --dark: oklch(0.1324 0.0541 260.04);
+    --light: oklch(0.9259 0.022 17.56);
   }
 }
 
@@ -49,9 +49,9 @@ button {
   padding: 1em;
   border-radius: 8px;
   /* Use the same color as li background */
-  background-color: #f5e1e1;
-  background: linear-gradient(145deg, #fbe9e7, #f5e1e1);
-  color: #101116;
+  background-color: var(--light);
+  background: linear-gradient(145deg, oklch(0.9478 0.0199 25.17), var(--light));
+  color: var(--dark);
   /* box-shadow: 2px 2px 10px #000000,
     -3px -3px 10px #668ce5; */
   transition: all 0.3s ease;
