@@ -20,6 +20,8 @@ export async function fetchWithRefresh(url, options = {}) {
         const refreshData = await refreshRes.json();
         if (refreshData.access_token) {
             accessToken = refreshData.access_token;
+            // Update the cookie so future requests use the new token
+            document.cookie = `access_token=${accessToken}; path=/;`;
             response = await fetch(url, {
                 ...options,
                 headers: {
