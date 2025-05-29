@@ -11,11 +11,9 @@ const host=process.env.NEXT_PUBLIC_HOST || 'http://127.0.0.1:3000';
 // Define the server action
 export async function handleSpotifyCallback(searchParams) {
   const code = searchParams.get('code');
-    console.log('spotify auth code =  ', code)
   if (!code) {
     return { error: 'Authorization code missing', status: 400 };
   }
-  console.log(host)
 
   const params = new URLSearchParams({
     grant_type: 'authorization_code',

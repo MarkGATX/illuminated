@@ -33,7 +33,6 @@ export async function POST() {
     }
 
     const data = await response.json();
-    console.log('Refreshed access token:', data.access_token);
     cookieStore.set('access_token', data.access_token, { httpOnly: false, maxAge: data.expires_in });
 
     // Optionally update refresh_token if Spotify returns a new one

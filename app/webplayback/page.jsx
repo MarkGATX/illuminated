@@ -101,8 +101,7 @@ export default function WebPlayback() {
   const fetchWithRefresh = async (url, options = {}) => {
     let accessToken = getAccessTokenFromCookie();
     // Debug logging
-    console.log('fetchWithRefresh: URL:', url);
-    console.log('fetchWithRefresh: Access Token:', accessToken);
+
     let response = await fetch(url, {
       ...options,
       headers: {
@@ -111,7 +110,7 @@ export default function WebPlayback() {
       },
     });
     // Debug response status
-    console.log('fetchWithRefresh: Response Status:', response.status);
+
 
     if (response.status === 401) {
       // Try to refresh the token
@@ -135,7 +134,7 @@ export default function WebPlayback() {
         return null;
       }
     }
-    console.log(response)
+
     return response;
   }
 
@@ -158,9 +157,7 @@ export default function WebPlayback() {
     
       const accessToken = document.cookie
         .split('; ')
-      console.log('Cookies:', document.cookie.split('; ').map(cookie => cookie.split('=')[0]))
         ?.split('=')[1];
-      console.log(document.cookie)
       if (!accessToken) {
         console.error("No access token found", accessToken);
         // window.location.href = "/";
@@ -193,7 +190,6 @@ export default function WebPlayback() {
       });
     
       setPlayer(newPlayer);
-      console.log('Player set:', newPlayer);
 
 
       newPlayer.addListener('ready', async ({ device_id }) => {
@@ -213,7 +209,6 @@ export default function WebPlayback() {
       });
 
       newPlayer.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
       });
 
       newPlayer.addListener('player_state_changed', (state => {
@@ -270,7 +265,6 @@ export default function WebPlayback() {
   useEffect(() => {
     if (colors && colors.length > 0) {
       const arr = getOklchColorArray(colors);
-      console.log('oklchColorsArray:', arr);
       setOklchColorsArray(arr);
     }
   }, [colors]);
@@ -289,14 +283,12 @@ export default function WebPlayback() {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
 
-        console.log('Premium check response:', res);
         // debugger;
         if (!res.ok) {
           setIsPremium(false);
           return;
         }
         const data = await res.json();
-        console.log(data)
         // debugger;
         setIsPremium(data.product === 'premium');
       } catch {

@@ -31,10 +31,6 @@ export async function GET() {
   const authorizationUrl = `https://accounts.spotify.com/authorize?${params}`;
 
   // Debug logging
-  console.log('SPOTIFY_CLIENT_ID:', spotify_client_id);
-  console.log('SPOTIFY_REDIRECT_URI:', spotify_redirect_uri);
-  console.log('SPOTIFY_SCOPE:', scope);
-  console.log('SPOTIFY_AUTH_URL:', authorizationUrl);
 
   return NextResponse.redirect(authorizationUrl);
 }

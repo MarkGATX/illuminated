@@ -28,7 +28,6 @@ export default function Playlists({ playPlaylist }) {
                 });
                 if (!res.ok) throw new Error('Failed to fetch playlists');
                 const data = await res.json();
-                console.log('playlists: ', data);
                 setPlaylists(data.items || []);
             } catch (err) {
                 setError(err.message);
