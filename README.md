@@ -6,7 +6,9 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-online-blue)](https://illuminated-sigma.vercel.app)
 
-Illuminated is a Spotify visualizer web application built with Next.js. It allows users to log in with their Spotify account, browse playlists, search for songs, and enjoy a dynamic visual experience synchronized with their music.
+Illuminated is a Spotify visualizer web application built with Next.js. It allows users to log in with their Spotify account, browse playlists, search for songs, and enjoy a dynamic visual experience synchronized with their music. This was created as a personal project and an experiment using an AI Agent as a coding assistant to help build the app.
+
+![App Demo](public/illuminated_demo.jpg)
 
 ## Features
 - **Spotify Authentication**: Securely log in with your Spotify account.
@@ -27,7 +29,9 @@ Illuminated is a Spotify visualizer web application built with Next.js. It allow
 This project started as a personal side project and turned into an experiment to use an AI Agent as a coding assistant. The app started with a basic layout and Spotify authentication. Then I used the Agent to incrementally add features like playlist browsing, song searching, and the visualizer.
 
 Overall I found using an AI Agent sped up many parts of the development process, especially for generating repetitive code and implementing complex features like the visualizer.
+
 There were some challenges that required a lot of back and forth with the Agent, especially around understanding the Spotify API and how to best implement the visualizer.
+
 Eventually I did have to take control of some parts of the code, especially when it came to fine-tuning the visualizer and ensuring everything worked smoothly together. There still needs to be some work to optimize the code for performance but it was a great learning experience.
 
 ## License
