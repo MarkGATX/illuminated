@@ -537,23 +537,20 @@ export default function WebPlayback() {
             <svg
               width="36" height="36" viewBox="0 0 100 100" fill="none"
               xmlns="http://www.w3.org/2000/svg" aria-label="Shuffle"
-              style={{
-                verticalAlign: 'middle',
-                marginRight: '1em',
-                cursor: 'pointer',
+              style={{              
                 background: isShuffling ? '#f5f5f5' : undefined,
                 borderRadius: '6px',
-                boxShadow: isShuffling ? '0 0 0 2px #f5f5f5' : undefined
+                boxShadow: isShuffling ? '0 0 0 2px oklch(0.9259 0.022 17.56)' : undefined,
               }}
               onClick={shufflePlayback}
               title={isShuffling ? 'Disable Shuffle' : 'Enable Shuffle'}
             >
               <path d="M83.745,69.516l-8.181,5.666V67.08c0,0-9.253,0-10.93,0c-15.551,0-29.989-27.566-41.66-27.566H8.069v-6.542h14.906  c18.125,0,29.063,27.65,41.66,27.65c1.76,0,10.93,0,10.93,0V52.52l8.181,5.666l8.186,5.665L83.745,69.516z"
-                fill={isShuffling ? '#222' : '#f5f5f5'} />
+                fill={isShuffling ? 'oklch(0.1324 0.0541 260.04)' : 'oklch(0.9259 0.022 17.56)'} />
               <path d="M50.619,45.877c0.375,0.396,0.749,0.794,1.123,1.19c4.344-4.354,8.521-7.69,12.894-7.69c1.76,0,10.93,0,10.93,0v8.103  l8.181-5.666l8.186-5.666l-8.186-5.666l-8.181-5.665v8.102c0,0-9.253,0-10.93,0c-6.048,0-11.926,4.172-17.539,9.269  C48.298,43.419,49.472,44.659,50.619,45.877z"
-                fill={isShuffling ? '#222' : '#f5f5f5'} />
+                fill={isShuffling ? 'oklch(0.1324 0.0541 260.04)' : 'oklch(0.9259 0.022 17.56)'} />
               <path d="M37.986,54.719c-0.633-0.626-1.276-1.261-1.923-1.894c-4.649,4.337-9.037,7.661-13.088,7.661H8.069v6.541h14.906  c6.979,0,12.889-4.103,18.243-9.145C40.123,56.824,39.044,55.763,37.986,54.719z"
-                fill={isShuffling ? '#222' : '#f5f5f5'} />
+                fill={isShuffling ? 'oklch(0.1324 0.0541 260.04)' : 'oklch(0.9259 0.022 17.56)'} />
             </svg>
             {/* Next Track: Two right chevrons */}
             <svg
