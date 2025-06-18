@@ -42,10 +42,14 @@ export async function handleSpotifyCallback(searchParams) {
 
     const data = await response.json();
     const { access_token, refresh_token, expires_in } = data;
-
+ 
     // Set the access token as a cookie
     const cookieStore = await cookies();
     cookieStore.set('access_token', access_token, { httpOnly: false, maxAge: expires_in });
+    // Set the refresh token as an HTTP-only cookie for 30 days if present
+    if (refresh_token) {
+      cookieStore.set('refresh_token', refresh_token, { httpOnly: true, maxAge: 60 * 60 * 24 * 30, path: '/' });
+    }
 
     return { success: true, access_token };
   } catch (err) {

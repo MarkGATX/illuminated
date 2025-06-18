@@ -28,6 +28,7 @@ export default function Playlists({ playPlaylist }) {
                 });
                 if (!res.ok) throw new Error('Failed to fetch playlists');
                 const data = await res.json();
+
                 setPlaylists(data.items || []);
             } catch (err) {
                 setError(err.message);
@@ -57,8 +58,7 @@ export default function Playlists({ playPlaylist }) {
     // Handler to play a playlist by passing a special object
     const handlePlaylistSelect = (playlist) => {
         if (playlist && playlist.uri) {
-            // Pass a special object to onTrackSelect with a playlistUri property
-            playPlaylist({ playlistUri: playlist.uri });
+            playPlaylist({ playlistUri: playlist.uri, playlistName: playlist.name });
         }
     };
 

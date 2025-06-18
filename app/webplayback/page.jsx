@@ -32,6 +32,7 @@ export default function WebPlayback() {
   const [nextTracks, setNextTracks] = useState([]);
   const [isPremium, setIsPremium] = useState(null);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [apiError, setApiError] = useState(null);
   const animationRef = useRef();
   const albumArtUrl = currentTrack?.album?.images[0]?.url || '/fallback.webp';
   const { colors } = useExtractColors(albumArtUrl, {
@@ -101,27 +102,10 @@ export default function WebPlayback() {
 
   const fetchWithRefresh = async (url, options = {}) => {
     let accessToken = getAccessTokenFromCookie();
-    // Debug logging
-
-    let response = await fetch(url, {
-      ...options,
-      headers: {
-        ...options.headers,
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    // Debug response status
-
-
-    if (response.status === 401) {
-      // Try to refresh the token
-      const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
-      const refreshData = await refreshRes.json();
-      if (refreshData.access_token) {
-        accessToken = refreshData.access_token;
-        // Update the cookie so future requests use the new token
-        document.cookie = `access_token=${accessToken}; path=/;`;
-        // Retry the original request
+    let response;
+    let retries = 0;
+    while (retries < 2) {
+      try {
         response = await fetch(url, {
           ...options,
           headers: {
@@ -129,13 +113,50 @@ export default function WebPlayback() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-      } else {
-        // Redirect to login or home if refresh fails
-        window.location.href = '/';
+        if (response.status === 401) {
+          // Try to refresh the token
+          const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
+          const refreshData = await refreshRes.json();
+          if (refreshData.access_token) {
+            accessToken = refreshData.access_token;
+            document.cookie = `access_token=${accessToken}; path=/;`;
+            retries++;
+            continue; // Retry original request
+          } else {
+            window.location.href = '/';
+            return null;
+          }
+        }
+        if (response.status === 502) {
+          setApiError('Spotify service is temporarily unavailable (502 Bad Gateway). Please try again later.');
+          return null;
+        }
+        if (response.status === 504) {
+          setApiError('Spotify service timed out (504 Gateway Timeout). Please try again in a moment.');
+          return null;
+        }
+        if (response.status === 500) {
+          setApiError('Spotify service encountered an internal error (500 Internal Server Error). Please try again later.');
+          return null;
+        }
+        // Check for token expired error in response body
+        if (response.status === 400 || response.status === 401) {
+          try {
+            const data = await response.clone().json();
+            if (data && data.error && typeof data.error === 'string' && data.error.toLowerCase().includes('token')) {
+              window.location.href = '/';
+              return null;
+            }
+          } catch (e) {
+            // ignore JSON parse errors
+          }
+        }
+        break;
+      } catch (err) {
+        setApiError('Network error. Please check your connection and try again.');
         return null;
       }
     }
-
     return response;
   }
 
@@ -392,7 +413,7 @@ export default function WebPlayback() {
     const fetchShuffleState = async () => {
       if (!deviceId) return;
       const res = await fetchWithRefresh(`https://api.spotify.com/v1/me/player`);
-      if (res.ok) {
+      if (res && res.ok) {
         const data = await res.json();
         setIsShuffling(!!data.shuffle_state);
       }
@@ -400,10 +421,15 @@ export default function WebPlayback() {
     fetchShuffleState();
   }, [deviceId]);
 
-
   return (
     <>
+
       <main>
+        {apiError && (
+          <div style={{ background: '#fee', color: '#900', padding: '1em', textAlign: 'center', zIndex: 1000, position: 'absolute', top: '50px' }}>
+            {apiError}
+          </div>
+        )}
         <header>
           <button className={styles.logoutButton}
             style={{ position: 'absolute', top: 20, right: 100, zIndex: 10, padding: '.5em' }}
@@ -447,7 +473,7 @@ export default function WebPlayback() {
           </div>
 
           <div className={styles.playButtonsContainer}>
-            
+
 
             {previousTracks.length === 0 ? (
               <div className={styles.previousTrackInfo}>
@@ -526,7 +552,7 @@ export default function WebPlayback() {
             <svg
               width="48" height="48" viewBox="0 0 100 100" fill="none"
               xmlns="http://www.w3.org/2000/svg" aria-label="Shuffle"
-              style={{              
+              style={{
                 background: isShuffling ? '#f5f5f5' : undefined,
                 borderRadius: '6px',
                 boxShadow: isShuffling ? '0 0 0 2px oklch(0.9259 0.022 17.56)' : undefined,
@@ -560,7 +586,7 @@ export default function WebPlayback() {
 
 
             {nextTracks.length === 0 ? (
-              <div key={nextTracks[0]?.id || 0} className={styles.nextTrackInfo}>
+              <div key="no-next-track" className={styles.nextTrackInfo}>
                 <div>
                   <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
                   <p></p>
@@ -574,7 +600,7 @@ export default function WebPlayback() {
                 </div>
               </div>
             ) : (
-              <div key={nextTracks[0]?.id || 0} className={styles.nextTrackInfo}>
+              <div key={`next-track-${nextTracks[0]?.id || nextTracks[0]?.uri || Math.random()}`} className={styles.nextTrackInfo}>
                 <div className={`${styles.trackInfoContainer} ${styles.next}`}>
                   <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{`${nextTracks[0]?.name}`}</h3>
                   <p>{`${nextTracks[0]?.artists?.[0]?.name}`}</p>
