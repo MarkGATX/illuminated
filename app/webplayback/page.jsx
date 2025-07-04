@@ -33,6 +33,8 @@ export default function WebPlayback() {
   const [isPremium, setIsPremium] = useState(null);
   const [isShuffling, setIsShuffling] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const [trackPosition, setTrackPosition] = useState(0);
+  const [trackDuration, setTrackDuration] = useState(0);
   const animationRef = useRef();
   const albumArtUrl = currentTrack?.album?.images[0]?.url || '/fallback.webp';
   const { colors } = useExtractColors(albumArtUrl, {
@@ -245,6 +247,8 @@ export default function WebPlayback() {
         setPaused(state.paused);
         setPreviousTracks(state.track_window.previous_tracks || []);
         setNextTracks(state.track_window.next_tracks || []);
+        setTrackPosition(state.position || 0);
+        setTrackDuration(state.duration || 0);
         newPlayer.getCurrentState().then(state => {
           setActive(!!state);
         });
@@ -433,6 +437,19 @@ export default function WebPlayback() {
     fetchShuffleState();
   }, [deviceId]);
 
+  // Progress bar animation (updates position every second if playing)
+  useEffect(() => {
+    let interval = null;
+    if (is_active && !is_paused && trackPosition < trackDuration) {
+      interval = setInterval(() => {
+        setTrackPosition(pos => Math.min(pos + 1000, trackDuration));
+      }, 1000);
+    } else if (interval) {
+      clearInterval(interval);
+    }
+    return () => interval && clearInterval(interval);
+  }, [is_active, is_paused, trackPosition, trackDuration]);
+
   return (
     <>
 
@@ -478,7 +495,19 @@ export default function WebPlayback() {
             <div className={styles.trackName}>{
               currentTrack?.name || "Unknown Track"
             }</div>
-
+            {/* Progress Bar */}
+            <div className={styles.progressBarWrapper}>
+              <div className={styles.progressBarBg}>
+                <div
+                  className={styles.progressBarFg}
+                  style={{ width: trackDuration ? `${(trackPosition / trackDuration) * 100}%` : '0%' }}
+                />
+              </div>
+              <div className={styles.progressTime}>
+                <span>{formatMs(trackPosition)}</span>
+                <span>{formatMs(trackDuration)}</span>
+              </div>
+            </div>
             <div className={styles.artistName}>{
               currentTrack?.artists[0]?.name || "Unknown Artist"
             } - {currentTrack?.album?.name || ""}</div>
@@ -637,4 +666,12 @@ export default function WebPlayback() {
       </main>
     </>
   );
+}
+
+// Helper to format ms to mm:ss
+function formatMs(ms) {
+  if (!ms || isNaN(ms)) return '0:00';
+  const min = Math.floor(ms / 60000);
+  const sec = Math.floor((ms % 60000) / 1000);
+  return `${min}:${sec.toString().padStart(2, '0')}`;
 }
