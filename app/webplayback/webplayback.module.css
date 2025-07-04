@@ -153,7 +153,7 @@
     background: linear-gradient(to right, rgba(2, 14, 42, 0.92) 70%, rgba(2, 14, 42, 0));
     font-size: .8em;
     border-radius: 10px 0 0 10px;
-    overflow:hidden;
+    overflow: hidden;
 }
 
 .trackImageContainer {
@@ -174,15 +174,15 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    width:calc(100% - 54px);
+    width: calc(100% - 54px);
 
-    
+
 
 }
 
 .next {
-        padding: 0 0 0 20px;
-    }
+    padding: 0 0 0 20px;
+}
 
 .trackName {
     font-size: 2em;
@@ -202,7 +202,7 @@
     gap: 0;
     z-index: 2;
     /* animation: cycleOpacity 4s infinite ease-in-out; */
-/* } */ 
+/* } */
 
 /* .left {
     left: -40px;
@@ -233,3 +233,12 @@
         opacity: 1;
     }
 } */
+
+.ellipsis {
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    text-align: left;
+}

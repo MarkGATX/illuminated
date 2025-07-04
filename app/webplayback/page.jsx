@@ -101,6 +101,7 @@ export default function WebPlayback() {
   }
 
   const fetchWithRefresh = async (url, options = {}) => {
+    setApiError(null); // Clear error at the start of each request
     let accessToken = getAccessTokenFromCookie();
     let response;
     let retries = 0;
@@ -156,6 +157,9 @@ export default function WebPlayback() {
         setApiError('Network error. Please check your connection and try again.');
         return null;
       }
+    }
+    if (response && response.ok) {
+      setApiError(null); // Clear error on success
     }
     return response;
   }
@@ -313,6 +317,7 @@ export default function WebPlayback() {
         }
         const data = await res.json();
         // debugger;
+        console.log(data)
         setIsPremium(data.product === 'premium');
       } catch {
         setIsPremium(false);
@@ -414,8 +419,15 @@ export default function WebPlayback() {
       if (!deviceId) return;
       const res = await fetchWithRefresh(`https://api.spotify.com/v1/me/player`);
       if (res && res.ok) {
-        const data = await res.json();
-        setIsShuffling(!!data.shuffle_state);
+        if (res.status === 204) {
+          // No content, nothing to parse
+          return;
+        }
+        const text = await res.text();
+        if (text) {
+          const data = JSON.parse(text);
+          setIsShuffling(!!data.shuffle_state);
+        }
       }
     };
     fetchShuffleState();
@@ -485,7 +497,7 @@ export default function WebPlayback() {
                   />
                 </div>
                 <div className={styles.trackInfoContainer}>
-                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
+                  <h3 className={styles.ellipsis}>No track</h3>
                   <p></p>
                 </div>
 
@@ -500,7 +512,7 @@ export default function WebPlayback() {
                   />
                 </div>
                 <div className={styles.trackInfoContainer}>
-                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{`${previousTracks[previousTracks.length - 1]?.name}`}</h3>
+                  <h3 className={styles.ellipsis}>{`${previousTracks[previousTracks.length - 1]?.name}`}</h3>
                   <p>{`${previousTracks[previousTracks.length - 1]?.artists?.[0]?.name}`}</p>
                 </div>
               </div>
@@ -587,8 +599,8 @@ export default function WebPlayback() {
 
             {nextTracks.length === 0 ? (
               <div key="no-next-track" className={styles.nextTrackInfo}>
-                <div>
-                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>No track</h3>
+                <div className={`${styles.trackInfoContainer} ${styles.next}`}>
+                  <h3 className={styles.ellipsis}>No track</h3>
                   <p></p>
                 </div>
                 <div className={styles.trackImageContainer}>
@@ -602,7 +614,7 @@ export default function WebPlayback() {
             ) : (
               <div key={`next-track-${nextTracks[0]?.id || nextTracks[0]?.uri || Math.random()}`} className={styles.nextTrackInfo}>
                 <div className={`${styles.trackInfoContainer} ${styles.next}`}>
-                  <h3 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{`${nextTracks[0]?.name}`}</h3>
+                  <h3 className={styles.ellipsis}>{`${nextTracks[0]?.name}`}</h3>
                   <p>{`${nextTracks[0]?.artists?.[0]?.name}`}</p>
                 </div>
                 <div className={styles.trackImageContainer}>
