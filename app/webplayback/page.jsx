@@ -6,6 +6,7 @@ import Color from 'colorjs.io';
 import SearchBar from '../components/SearchBar';
 import Playlists from '../components/Playlists';
 import ColorVisualizer from '../components/colorVisualizer';
+import { fetchWithRefresh } from '../utils/spotifyFetch';
 
 
 const track = {
@@ -100,70 +101,6 @@ export default function WebPlayback() {
         alert('Failed to like track.');
       }
     }
-  }
-
-  const fetchWithRefresh = async (url, options = {}) => {
-    setApiError(null); // Clear error at the start of each request
-    let accessToken = getAccessTokenFromCookie();
-    let response;
-    let retries = 0;
-    while (retries < 2) {
-      try {
-        response = await fetch(url, {
-          ...options,
-          headers: {
-            ...options.headers,
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (response.status === 401) {
-          // Try to refresh the token
-          const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
-          const refreshData = await refreshRes.json();
-          if (refreshData.access_token) {
-            accessToken = refreshData.access_token;
-            document.cookie = `access_token=${accessToken}; path=/;`;
-            retries++;
-            continue; // Retry original request
-          } else {
-            window.location.href = '/';
-            return null;
-          }
-        }
-        if (response.status === 502) {
-          setApiError('Spotify service is temporarily unavailable (502 Bad Gateway). Please try again later.');
-          return null;
-        }
-        if (response.status === 504) {
-          setApiError('Spotify service timed out (504 Gateway Timeout). Please try again in a moment.');
-          return null;
-        }
-        if (response.status === 500) {
-          setApiError('Spotify service encountered an internal error (500 Internal Server Error). Please try again later.');
-          return null;
-        }
-        // Check for token expired error in response body
-        if (response.status === 400 || response.status === 401) {
-          try {
-            const data = await response.clone().json();
-            if (data && data.error && typeof data.error === 'string' && data.error.toLowerCase().includes('token')) {
-              window.location.href = '/';
-              return null;
-            }
-          } catch (e) {
-            // ignore JSON parse errors
-          }
-        }
-        break;
-      } catch (err) {
-        setApiError('Network error. Please check your connection and try again.');
-        return null;
-      }
-    }
-    if (response && response.ok) {
-      setApiError(null); // Clear error on success
-    }
-    return response;
   }
 
   useEffect(() => {
