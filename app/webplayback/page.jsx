@@ -244,6 +244,7 @@ export default function WebPlayback() {
       if (!accessToken) {
         setIsPremium(false);
         console.error("No access token found for premium check");
+        window.location.href = '/'; // Redirect to login/home
         return;
       }
       try {
