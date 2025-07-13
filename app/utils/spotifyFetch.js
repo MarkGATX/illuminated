@@ -38,9 +38,18 @@ export async function fetchWithRefresh(url, options = {}, setApiError = null) {
                     continue; // Retry original request
                 } else {
                     console.error('Token refresh failed. Redirecting to login.'); // Debugging log
+                    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;'; // Clear cookie
                     window.location.href = '/';
                     throw new Error('Session expired. Please log in again.');
                 }
+            }
+
+            // Handle 403 Forbidden (account used elsewhere or token revoked)
+            if (response.status === 403) {
+                console.error('Access forbidden. Token may be revoked or account used elsewhere. Redirecting to login.');
+                document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;'; // Clear cookie
+                window.location.href = '/';
+                throw new Error('Access forbidden. Please log in again.');
             }
 
             if (response.status === 502 && setApiError) {
